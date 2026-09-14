@@ -14,10 +14,10 @@ class DatabaseCallback @Inject constructor(
 
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-        
+
         CoroutineScope(Dispatchers.IO).launch {
             val categoryDao = database.get().categoryDao
-            
+
             // Seed immutable system categories
             categoryDao.insertCategory(
                 com.amehran.expenselite.data.local.entity.CategoryEntity(
@@ -56,7 +56,7 @@ class DatabaseCallback @Inject constructor(
                     id = 5,
                     name = "Bills",
                     iconResName = "ic_bills",
-                    isSystemDefault = true
+                    isSystemDefault = true,
                 )
             )
             categoryDao.insertCategory(
@@ -64,7 +64,7 @@ class DatabaseCallback @Inject constructor(
                     id = 6,
                     name = "Income",
                     iconResName = "ic_income",
-                    isSystemDefault = true
+                    isSystemDefault = true,
                 )
             )
         }

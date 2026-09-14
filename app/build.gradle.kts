@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -40,10 +42,24 @@ android {
     buildFeatures {
         compose = true
     }
+    // app/build.gradle.kts
+    tasks.register<io.gitlab.arturbosch.detekt.Detekt>("detektAutoCorrect") {
+        description = "Runs Detekt and automatically fixes fixable code smells and formatting."
+        autoCorrect = true
+        ignoreFailures = true // Allow build to pass while reporting remaining issues
+        buildUponDefaultConfig = true
+        setSource(files("src/main/java", "src/main/kotlin"))
+
+        val detektConfigFile = file("$rootDir/config/detekt/detekt.yml")
+        if (detektConfigFile.exists()) {
+            config.setFrom(detektConfigFile)
+        }
+    }
 }
 
 dependencies {
     // Core & Compose BOM
+    detektPlugins(libs.detekt.formatting)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

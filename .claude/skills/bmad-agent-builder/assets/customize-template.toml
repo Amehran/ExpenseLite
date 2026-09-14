@@ -16,7 +16,7 @@ icon = "{agent-icon}"
 description = "{agent-description}"
 agent_type = "{agent-type}"   # stateless | memory | autonomous
 
-{if-customizable}
+<if-customizable>
 
 # --- Configurable below. Overrides merge per BMad structural rules: ---
 #   scalars: override wins • arrays (persistent_facts, activation_steps_*): append
@@ -60,4 +60,4 @@ persistent_facts = []
 #   *_output_path     -- writable destinations
 #   on_<event>        -- hook scalars (prompts/commands)
 
-{/if-customizable}
+</if-customizable>

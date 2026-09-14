@@ -27,8 +27,8 @@ object DatabaseModule {
             ExpenseDatabase::class.java,
             ExpenseDatabase.DATABASE_NAME
         )
-        .addCallback(callback)
-        .build()
+            .addCallback(callback)
+            .build()
     }
 
     @Provides

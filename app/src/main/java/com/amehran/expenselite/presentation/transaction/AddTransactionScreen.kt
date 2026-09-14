@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amehran.expenselite.domain.model.Category
 import com.amehran.expenselite.domain.model.RecurrenceInterval
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +95,11 @@ fun AddTransactionScreen(
                 )
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.MONTHLY,
-                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY)) },
+                    onClick = {
+                        viewModel.onEvent(
+                            AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY)
+                        )
+                    },
                     label = { Text("Monthly") }
                 )
                 FilterChip(
@@ -114,7 +117,10 @@ fun AddTransactionScreen(
                 enabled = !uiState.isLoading
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 } else {
                     Text("Save Transaction")
                 }

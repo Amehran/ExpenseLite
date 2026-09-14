@@ -27,7 +27,7 @@ class GetDashboardDataUseCase @Inject constructor(
                     expense += it.amountCents
                 }
             }
-            
+
             DashboardData(
                 totalBalanceCents = income - expense,
                 totalIncomeCents = income,

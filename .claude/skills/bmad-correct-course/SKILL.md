@@ -280,6 +280,7 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
 <check if="Major scope">
   <action>Route to: Product Manager / Solution Architect</action>
   <action>Deliverables: Complete Sprint Change Proposal + escalation notice</action>
+</check>
 
 <action>Confirm handoff completion and next steps with user</action>
 <action>Document handoff in workflow execution log</action>
@@ -293,7 +294,7 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
   - Change scope: {{scope_classification}}
   - Artifacts modified: {{list_of_artifacts}}
   - Routed to: {{handoff_recipients}}
-
+</step>
 <action>Confirm all deliverables produced:</action>
 
 - Sprint Change Proposal document
@@ -303,6 +304,6 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
 <action>Report workflow completion to user with personalized message: "Correct Course workflow complete, {user_name}!"</action>
 <action>Remind user of success criteria and next steps for Developer agent</action>
 <action>Run: `uv run {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --project-root {project-root} --key workflow.on_complete` — if the resolved value is non-empty, follow it as the final terminal instruction before exiting.</action>
-</step>
+
 
 </workflow>

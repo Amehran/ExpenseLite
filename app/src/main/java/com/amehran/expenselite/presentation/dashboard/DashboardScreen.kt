@@ -99,7 +99,11 @@ private fun DashboardContent(state: DashboardState.Success) {
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("Expense", style = MaterialTheme.typography.bodyMedium)
-                        Text(state.totalExpense, color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            state.totalExpense,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
             }
@@ -125,7 +129,7 @@ private fun DashboardContent(state: DashboardState.Success) {
 private fun TransactionItem(expense: Expense) {
     val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     val dateString = formatter.format(Date(expense.timestamp))
-    
+
     val amountColor = if (expense.isIncome) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error
     val sign = if (expense.isIncome) "+" else "-"
     val amountString = String.format("%s$%.2f", sign, expense.amountCents / 100.0)
@@ -140,7 +144,11 @@ private fun TransactionItem(expense: Expense) {
         ) {
             Column {
                 Text(expense.title, style = MaterialTheme.typography.titleMedium)
-                Text(dateString, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    dateString,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
             Text(
                 text = amountString,

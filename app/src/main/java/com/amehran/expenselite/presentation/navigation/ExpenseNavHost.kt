@@ -27,21 +27,21 @@ fun ExpenseNavHost(
                 onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) }
             )
         }
-        
+
         composable(Screen.AddTransaction.route) {
             AddTransactionScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(Screen.CategoryManagement.route) {
             Text("Category Management (Coming Soon)")
         }
-        
+
         composable(Screen.Analytics.route) {
             Text("Analytics (Coming Soon)")
         }
-        
+
         composable(Screen.Settings.route) {
             Text("Settings (Coming Soon)")
         }
