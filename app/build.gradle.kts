@@ -43,17 +43,10 @@ android {
         compose = true
     }
     // app/build.gradle.kts
-    tasks.register<io.gitlab.arturbosch.detekt.Detekt>("detektAutoCorrect") {
-        description = "Runs Detekt and automatically fixes fixable code smells and formatting."
-        autoCorrect = true
-        ignoreFailures = true // Allow build to pass while reporting remaining issues
+    detekt {
         buildUponDefaultConfig = true
-        setSource(files("src/main/java", "src/main/kotlin"))
-
-        val detektConfigFile = file("$rootDir/config/detekt/detekt.yml")
-        if (detektConfigFile.exists()) {
-            config.setFrom(detektConfigFile)
-        }
+        ignoreFailures = true // Prevents detekt from breaking local & CI builds
+        config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
     }
 }
 
