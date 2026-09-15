@@ -26,6 +26,7 @@ constructor(
                     name = "Uncategorized",
                     iconResName = "ic_uncategorized",
                     isSystemDefault = true,
+                    colorHex = "#9E9E9E",
                 ),
             )
             categoryDao.insertCategory(
@@ -34,6 +35,7 @@ constructor(
                     name = "Food",
                     iconResName = "ic_food",
                     isSystemDefault = true,
+                    colorHex = "#4CAF50",
                 ),
             )
             categoryDao.insertCategory(
@@ -42,6 +44,7 @@ constructor(
                     name = "Transport",
                     iconResName = "ic_transport",
                     isSystemDefault = true,
+                    colorHex = "#FF9800",
                 ),
             )
             categoryDao.insertCategory(
@@ -50,6 +53,7 @@ constructor(
                     name = "Entertainment",
                     iconResName = "ic_entertainment",
                     isSystemDefault = true,
+                    colorHex = "#E91E63",
                 ),
             )
             categoryDao.insertCategory(
@@ -58,6 +62,7 @@ constructor(
                     name = "Bills",
                     iconResName = "ic_bills",
                     isSystemDefault = true,
+                    colorHex = "#5C6BC0",
                 ),
             )
             categoryDao.insertCategory(
@@ -66,6 +71,7 @@ constructor(
                     name = "Income",
                     iconResName = "ic_income",
                     isSystemDefault = true,
+                    colorHex = "#009688",
                 ),
             )
         }
