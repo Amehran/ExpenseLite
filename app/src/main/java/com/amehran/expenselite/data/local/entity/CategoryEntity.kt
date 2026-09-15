@@ -14,4 +14,5 @@ data class CategoryEntity(
     val name: String,
     val iconResName: String,
     val isSystemDefault: Boolean,
+    val colorHex: String = "",
 )

@@ -8,7 +8,7 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 **Purpose**: Prepare database for category colors, names, and migration.
 
 - [x] T201 Update `ExpenseEntity`: Add `categoryName` (String, default `""`) and `categoryColorHex` (String, default `""`).
-- [ ] T202 Update `CategoryEntity`: Add `colorHex` (String) to support colors.
+- [x] T202 Update `CategoryEntity`: Add `colorHex` (String) to support colors.
 - [ ] T203 Create `MIGRATION_1_2` in `ExpenseDatabase` with `ALTER TABLE` scripts for `expenses` (add `categoryName`, `categoryColorHex`) and `categories` (add `colorHex`).
 - [ ] T204 Bump database version to `2` and ensure `exportSchema = true` is set with the path configured in KSP.
 - [ ] T205 Write Android instrumented test `MigrationTestHelper` to verify `MIGRATION_1_2` preserves existing data and populates new columns.
