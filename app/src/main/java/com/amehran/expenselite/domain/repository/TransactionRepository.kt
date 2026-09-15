@@ -18,4 +18,10 @@ interface TransactionRepository {
     suspend fun updateExpense(expense: Expense)
 
     suspend fun deleteExpense(expense: Expense)
+
+    suspend fun addCategory(category: Category): Long
+
+    suspend fun deleteCategory(category: Category)
+
+    suspend fun reassignExpensesToUncategorized(oldCategoryId: Long)
 }

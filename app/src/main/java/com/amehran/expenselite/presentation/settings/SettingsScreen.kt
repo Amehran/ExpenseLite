@@ -33,6 +33,7 @@ import java.util.Locale
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToCategoryManagement: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -83,6 +84,13 @@ fun SettingsScreen(
             }
 
             Text("Data Management", style = MaterialTheme.typography.titleMedium)
+
+            Button(
+                onClick = onNavigateToCategoryManagement,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text("Manage Categories")
+            }
 
             Button(
                 onClick = {

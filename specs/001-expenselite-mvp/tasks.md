@@ -101,9 +101,9 @@
 
 ### Implementation for User Story 6
 
-- [ ] T027 [P] [US6] Create `DeleteCategoryUseCase` (reassigns expenses to ID 1) in app/src/main/java/com/example/expenselite/domain/usecase/DeleteCategoryUseCase.kt
-- [ ] T028 [US6] Create `CategoryManagementViewModel` in app/src/main/java/com/example/expenselite/presentation/category/CategoryManagementViewModel.kt
-- [ ] T029 [US6] Implement `CategoryManagementScreen` in app/src/main/java/com/example/expenselite/presentation/category/CategoryManagementScreen.kt
+- [x] T027 [P] [US6] Create `DeleteCategoryUseCase` (reassigns expenses to ID 1) in app/src/main/java/com/example/expenselite/domain/usecase/DeleteCategoryUseCase.kt
+- [x] T028 [US6] Create `CategoryManagementViewModel` in app/src/main/java/com/example/expenselite/presentation/category/CategoryManagementViewModel.kt
+- [x] T029 [US6] Implement `CategoryManagementScreen` in app/src/main/java/com/example/expenselite/presentation/category/CategoryManagementScreen.kt
 
 ---
 

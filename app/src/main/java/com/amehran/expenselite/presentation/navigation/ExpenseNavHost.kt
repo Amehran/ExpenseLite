@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.amehran.expenselite.presentation.category.CategoryManagementScreen
 import com.amehran.expenselite.presentation.dashboard.DashboardScreen
 import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
@@ -36,7 +37,9 @@ fun ExpenseNavHost(
         }
 
         composable(Screen.CategoryManagement.route) {
-            Text("Category Management (Coming Soon)")
+            CategoryManagementScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable(Screen.Analytics.route) {
@@ -46,6 +49,7 @@ fun ExpenseNavHost(
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() },
+                onNavigateToCategoryManagement = { navController.navigate(Screen.CategoryManagement.route) },
             )
         }
     }

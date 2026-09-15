@@ -50,6 +50,18 @@ constructor(
         expenseDao.deleteExpense(expense.toEntity())
     }
 
+    override suspend fun addCategory(category: Category): Long {
+        return categoryDao.insertCategory(category.toEntity())
+    }
+
+    override suspend fun deleteCategory(category: Category) {
+        categoryDao.deleteCategory(category.toEntity())
+    }
+
+    override suspend fun reassignExpensesToUncategorized(oldCategoryId: Long) {
+        expenseDao.reassignExpensesToUncategorized(oldCategoryId)
+    }
+
     // Mappers
     private fun ExpenseEntity.toDomainModel(): Expense {
         return Expense(
@@ -81,6 +93,15 @@ constructor(
 
     private fun CategoryEntity.toDomainModel(): Category {
         return Category(
+            id = this.id,
+            name = this.name,
+            iconResName = this.iconResName,
+            isSystemDefault = this.isSystemDefault,
+        )
+    }
+
+    private fun Category.toEntity(): CategoryEntity {
+        return CategoryEntity(
             id = this.id,
             name = this.name,
             iconResName = this.iconResName,
