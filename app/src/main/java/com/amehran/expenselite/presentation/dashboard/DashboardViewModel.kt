@@ -20,6 +20,13 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
+sealed interface TransactionFilter {
+    data object All : TransactionFilter
+    data object Income : TransactionFilter
+    data object Expense : TransactionFilter
+    data class Category(val id: Long, val name: String) : TransactionFilter
+}
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DashboardViewModel
@@ -32,6 +39,15 @@ constructor(
     private val _monthOffset = MutableStateFlow(0)
     val monthOffset: StateFlow<Int> = _monthOffset.asStateFlow()
 
+    private val _activeFilter = MutableStateFlow<TransactionFilter>(TransactionFilter.All)
+    val activeFilter: StateFlow<TransactionFilter> = _activeFilter.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _isSearchActive = MutableStateFlow(false)
+    val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
+
     val uiState: StateFlow<DashboardState> =
         combine(
             _monthOffset.flatMapLatest { offset ->
@@ -40,7 +56,34 @@ constructor(
             },
             calculateProjectedSubscriptionsUseCase(),
             _monthOffset,
-        ) { data, projectedSubscriptionsCents, offset ->
+            _activeFilter,
+            _searchQuery,
+        ) { data, projectedSubscriptionsCents, offset, filter, query ->
+            val daysInMonth = YearMonth.now().plusMonths(offset.toLong()).lengthOfMonth()
+            val avgDailySpendCents = if (daysInMonth > 0) data.totalExpenseCents / daysInMonth else 0L
+
+            val filteredTransactions = data.recentTransactions.filter { expense ->
+                val matchesFilter = when (filter) {
+                    is TransactionFilter.All -> true
+                    is TransactionFilter.Income -> expense.isIncome
+                    is TransactionFilter.Expense -> !expense.isIncome
+                    is TransactionFilter.Category -> expense.categoryId == filter.id
+                }
+                val matchesSearch = query.isBlank() || expense.title.contains(query, ignoreCase = true)
+                matchesFilter && matchesSearch
+            }
+
+            val dynamicCategories = data.recentTransactions
+                .map { TransactionFilter.Category(it.categoryId, it.categoryName) }
+                .distinctBy { it.id }
+                .sortedBy { it.name }
+
+            val availableFilters = listOf(
+                TransactionFilter.All,
+                TransactionFilter.Income,
+                TransactionFilter.Expense,
+            ) + dynamicCategories
+
             DashboardState.Success(
                 selectedMonthLabel = getMonthLabel(offset),
                 monthOffset = offset,
@@ -48,8 +91,14 @@ constructor(
                 totalIncome = formatCurrency(data.totalIncomeCents),
                 totalExpense = formatCurrency(data.totalExpenseCents),
                 projectedSubscriptions = formatCurrency(projectedSubscriptionsCents),
-                recentTransactions = data.recentTransactions,
+                monthlyBurnRate = formatCurrency(data.totalExpenseCents),
+                avgDailySpend = formatCurrency(avgDailySpendCents),
+                recentTransactions = filteredTransactions,
+                activeFilter = filter,
+                availableFilters = availableFilters,
             )
+        }.combine(_isSearchActive) { state, isSearchActive ->
+            state.copy(isSearchActive = isSearchActive, searchQuery = _searchQuery.value)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -62,6 +111,21 @@ constructor(
 
     fun selectNextMonth() {
         _monthOffset.value += 1
+    }
+
+    fun setFilter(filter: TransactionFilter) {
+        _activeFilter.value = filter
+    }
+
+    fun toggleSearch() {
+        _isSearchActive.value = !_isSearchActive.value
+        if (!_isSearchActive.value) {
+            _searchQuery.value = ""
+        }
+    }
+
+    fun setSearchQuery(query: String) {
+        _searchQuery.value = query
     }
 
     private fun getMonthDateRange(offset: Int): Pair<Long, Long> {
@@ -93,6 +157,12 @@ sealed interface DashboardState {
         val totalIncome: String,
         val totalExpense: String,
         val projectedSubscriptions: String,
+        val monthlyBurnRate: String,
+        val avgDailySpend: String,
         val recentTransactions: List<Expense>,
+        val activeFilter: TransactionFilter,
+        val availableFilters: List<TransactionFilter>,
+        val isSearchActive: Boolean = false,
+        val searchQuery: String = "",
     ) : DashboardState
 }

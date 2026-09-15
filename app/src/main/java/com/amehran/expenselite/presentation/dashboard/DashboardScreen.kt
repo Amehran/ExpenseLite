@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -58,25 +61,38 @@ fun DashboardScreen(
                 title = {
                     val state = uiState
                     if (state is DashboardState.Success) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                        ) {
-                            IconButton(onClick = viewModel::selectPreviousMonth) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Previous Month",
-                                )
-                            }
-                            Text(
-                                text = state.selectedMonthLabel,
-                                style = MaterialTheme.typography.titleMedium,
+                        if (state.isSearchActive) {
+                            androidx.compose.material3.OutlinedTextField(
+                                value = state.searchQuery,
+                                onValueChange = viewModel::setSearchQuery,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(56.dp)
+                                    .padding(end = 8.dp),
+                                placeholder = { Text("Search transactions...") },
+                                singleLine = true,
                             )
-                            IconButton(onClick = viewModel::selectNextMonth) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = "Next Month",
+                        } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                IconButton(onClick = viewModel::selectPreviousMonth) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Previous Month",
+                                    )
+                                }
+                                Text(
+                                    text = state.selectedMonthLabel,
+                                    style = MaterialTheme.typography.titleMedium,
                                 )
+                                IconButton(onClick = viewModel::selectNextMonth) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                        contentDescription = "Next Month",
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -89,8 +105,20 @@ fun DashboardScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onNavigateToAnalytics) {
-                        Icon(Icons.Default.Search, contentDescription = "Analytics")
+                    val state = uiState
+                    if (state is DashboardState.Success) {
+                        if (state.isSearchActive) {
+                            IconButton(onClick = viewModel::toggleSearch) {
+                                Icon(Icons.Default.Close, contentDescription = "Close Search")
+                            }
+                        } else {
+                            IconButton(onClick = viewModel::toggleSearch) {
+                                Icon(Icons.Default.Search, contentDescription = "Search")
+                            }
+                            IconButton(onClick = onNavigateToAnalytics) {
+                                Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Analytics")
+                            }
+                        }
                     }
                 },
             )
@@ -112,7 +140,10 @@ fun DashboardScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is DashboardState.Success -> {
-                    DashboardContent(state = state)
+                    DashboardContent(
+                        state = state,
+                        onFilterSelected = viewModel::setFilter,
+                    )
                 }
             }
         }
@@ -120,7 +151,10 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun DashboardContent(state: DashboardState.Success) {
+private fun DashboardContent(
+    state: DashboardState.Success,
+    onFilterSelected: (TransactionFilter) -> Unit,
+) {
     Column(
         modifier =
         Modifier
@@ -164,6 +198,25 @@ private fun DashboardContent(state: DashboardState.Success) {
                         )
                     }
                 }
+            }
+        }
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(state.availableFilters) { filter ->
+                val label = when (filter) {
+                    is TransactionFilter.All -> "All"
+                    is TransactionFilter.Income -> "Income"
+                    is TransactionFilter.Expense -> "Expense"
+                    is TransactionFilter.Category -> filter.name
+                }
+                androidx.compose.material3.FilterChip(
+                    selected = state.activeFilter == filter,
+                    onClick = { onFilterSelected(filter) },
+                    label = { Text(label) },
+                )
             }
         }
 
