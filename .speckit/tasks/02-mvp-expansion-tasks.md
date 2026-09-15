@@ -32,7 +32,7 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 ## Phase 3 — Dashboard Enhancements
 **Purpose**: Monthly filters, chips, and cash flow insights.
 
-- [ ] T214 Update `GetDashboardDataUseCase` and `ExpenseDao` to support filtering by month (start/end timestamp).
+- [x] T214 Update `GetDashboardDataUseCase` and `ExpenseDao` to support filtering by month (start/end timestamp).
 - [ ] T215 Implement "Previous/Next Month" chevrons in Dashboard Top App Bar to change the selected month offset.
 - [ ] T216 Update `DashboardViewModel` to support an active filter state (`All`, `Income`, `Expense`, or `Category` ID) and derive "Monthly Burn Rate" and "Avg Daily Spend" for summary cards.
 - [ ] T217 Add horizontally scrollable row of filter chips (`All`, `Income`, `Expense`, + dynamic categories) to `DashboardScreen` just below the summary cards.

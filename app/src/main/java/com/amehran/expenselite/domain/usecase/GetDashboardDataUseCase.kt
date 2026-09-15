@@ -18,8 +18,13 @@ class GetDashboardDataUseCase
 constructor(
     private val repository: TransactionRepository,
 ) {
-    operator fun invoke(): Flow<DashboardData> {
-        return repository.getAllExpenses().map { expenses ->
+    operator fun invoke(startTimestamp: Long? = null, endTimestamp: Long? = null): Flow<DashboardData> {
+        val flow = if (startTimestamp != null && endTimestamp != null) {
+            repository.getExpensesByDateRange(startTimestamp, endTimestamp)
+        } else {
+            repository.getAllExpenses()
+        }
+        return flow.map { expenses ->
             var income = 0L
             var expense = 0L
             expenses.forEach {
@@ -34,7 +39,7 @@ constructor(
                 totalBalanceCents = income - expense,
                 totalIncomeCents = income,
                 totalExpenseCents = expense,
-                recentTransactions = expenses.take(10), // Show last 10
+                recentTransactions = if (startTimestamp != null && endTimestamp != null) expenses else expenses.take(10),
             )
         }
     }
