@@ -105,4 +105,16 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // Testing
+    testImplementation("org.json:json:20240303")
+
+    // Compose UI Testing
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    // JUnit Runner
+    androidTestImplementation(libs.androidx.junit)
+    testImplementation(kotlin("test"))
 }

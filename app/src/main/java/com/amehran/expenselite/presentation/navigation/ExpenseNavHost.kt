@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.amehran.expenselite.presentation.dashboard.DashboardScreen
+import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
 
 @Composable
@@ -43,7 +44,9 @@ fun ExpenseNavHost(
         }
 
         composable(Screen.Settings.route) {
-            Text("Settings (Coming Soon)")
+            SettingsScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
     }
 }

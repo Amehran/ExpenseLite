@@ -72,9 +72,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Update `AddTransactionScreen` to include recurrence UI (NONE, MONTHLY, YEARLY) in app/src/main/java/com/example/expenselite/presentation/transaction/AddTransactionScreen.kt
-- [ ] T021 [US2] Create `CalculateProjectedSubscriptionsUseCase` in app/src/main/java/com/example/expenselite/domain/usecase/CalculateProjectedSubscriptionsUseCase.kt
-- [ ] T022 [US2] Update `DashboardScreen` to display projected subscriptions total in app/src/main/java/com/example/expenselite/presentation/dashboard/DashboardScreen.kt
+- [x] T020 [P] [US2] Update `AddTransactionScreen` to include recurrence UI (NONE, MONTHLY, YEARLY) in app/src/main/java/com/example/expenselite/presentation/transaction/AddTransactionScreen.kt
+- [x] T021 [US2] Create `CalculateProjectedSubscriptionsUseCase` in app/src/main/java/com/example/expenselite/domain/usecase/CalculateProjectedSubscriptionsUseCase.kt
+- [x] T022 [US2] Update `DashboardScreen` to display projected subscriptions total in app/src/main/java/com/example/expenselite/presentation/dashboard/DashboardScreen.kt
 
 ---
 
@@ -86,10 +86,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T023 [P] [US5] Implement `ExportDataUseCase` (JSON serialization of all Room data) in app/src/main/java/com/example/expenselite/domain/usecase/ExportDataUseCase.kt
-- [ ] T024 [P] [US5] Implement `ImportDataUseCase` (JSON deserialization and DB overwrite) in app/src/main/java/com/example/expenselite/domain/usecase/ImportDataUseCase.kt
-- [ ] T025 [US5] Create `SettingsViewModel` to handle SAF streams in app/src/main/java/com/example/expenselite/presentation/settings/SettingsViewModel.kt
-- [ ] T026 [US5] Implement `SettingsScreen` with SAF `CreateDocument`/`OpenDocument` launchers in app/src/main/java/com/example/expenselite/presentation/settings/SettingsScreen.kt
+- [x] T023 [P] [US5] Implement `ExportDataUseCase` (JSON serialization of all Room data) in app/src/main/java/com/example/expenselite/domain/usecase/ExportDataUseCase.kt
+- [x] T024 [P] [US5] Implement `ImportDataUseCase` (JSON deserialization and DB overwrite) in app/src/main/java/com/example/expenselite/domain/usecase/ImportDataUseCase.kt
+- [x] T025 [US5] Create `SettingsViewModel` to handle SAF streams in app/src/main/java/com/example/expenselite/presentation/settings/SettingsViewModel.kt
+- [x] T026 [US5] Implement `SettingsScreen` with SAF `CreateDocument`/`OpenDocument` launchers in app/src/main/java/com/example/expenselite/presentation/settings/SettingsScreen.kt
 
 ---
 
