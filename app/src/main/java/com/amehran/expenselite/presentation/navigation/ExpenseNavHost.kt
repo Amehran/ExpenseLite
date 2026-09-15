@@ -17,42 +17,42 @@ import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
 fun ExpenseNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screen.Dashboard.route,
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = AppRoute.DashboardRoute,
         modifier = modifier.fillMaxSize(),
     ) {
-        composable(Screen.Dashboard.route) {
+        composable<AppRoute.DashboardRoute> {
             DashboardScreen(
-                onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) },
-                onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) },
+                onNavigateToAddTransaction = { navController.navigate(AppRoute.AddEditRoute()) },
+                onNavigateToAnalytics = { navController.navigate(AppRoute.AnalyticsRoute) },
             )
         }
 
-        composable(Screen.AddTransaction.route) {
+        composable<AppRoute.AddEditRoute> {
+            // Note: If you need to read expenseId, it's inside it.toRoute<AppRoute.AddEditRoute>().expenseId
             AddTransactionScreen(
                 onNavigateBack = { navController.popBackStack() },
             )
         }
 
-        composable(Screen.CategoryManagement.route) {
+        composable<AppRoute.CategoryRoute> {
             CategoryManagementScreen(
                 onNavigateBack = { navController.popBackStack() },
             )
         }
 
-        composable(Screen.Analytics.route) {
+        composable<AppRoute.AnalyticsRoute> {
             AnalyticsScreen(
                 onNavigateBack = { navController.popBackStack() },
             )
         }
 
-        composable(Screen.Settings.route) {
+        composable<AppRoute.SettingsRoute> {
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToCategoryManagement = { navController.navigate(Screen.CategoryManagement.route) },
+                onNavigateToCategoryManagement = { navController.navigate(AppRoute.CategoryRoute) },
             )
         }
     }
