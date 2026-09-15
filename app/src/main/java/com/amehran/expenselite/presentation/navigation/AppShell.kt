@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 fun AppShell(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
     val scope = rememberCoroutineScope()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
@@ -51,7 +51,7 @@ fun AppShell(
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 )
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
@@ -64,7 +64,7 @@ fun AppShell(
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 )
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
@@ -77,15 +77,15 @@ fun AppShell(
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 )
             }
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         ExpenseNavHost(
             navController = navController,
-            drawerState = drawerState
+            drawerState = drawerState,
         )
     }
 }

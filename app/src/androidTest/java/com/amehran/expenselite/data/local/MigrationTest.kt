@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
 
-    private val TEST_DB = "migration-test"
+    private const val TEST_DB = "migration-test"
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
         ExpenseDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
+        FrameworkSQLiteOpenHelperFactory(),
     )
 
     @Test

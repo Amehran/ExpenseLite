@@ -1,6 +1,9 @@
 package com.amehran.expenselite.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -15,15 +18,11 @@ import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
 import kotlinx.coroutines.launch
 
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.rememberDrawerState
-
 @Composable
 fun ExpenseNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
     val scope = rememberCoroutineScope()
 
