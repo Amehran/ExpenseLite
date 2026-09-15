@@ -16,7 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.amehran.expenselite.domain.repository.SettingsRepository
-import com.amehran.expenselite.presentation.navigation.ExpenseNavHost
+import com.amehran.expenselite.presentation.navigation.AppShell
 import com.amehran.expenselite.presentation.util.SnackbarController
 import com.amehran.expenselite.ui.theme.ExpenseLiteTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 ) { innerPadding ->
-                    ExpenseNavHost(
+                    AppShell(
                         modifier = Modifier.padding(innerPadding),
                     )
                 }

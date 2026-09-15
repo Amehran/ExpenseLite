@@ -24,7 +24,7 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 - [x] T209 Update `libs.versions.toml` and `build.gradle.kts` to ensure Navigation Compose `2.8.x` is used and Kotlinx Serialization plugin is applied.
 - [x] T210 Refactor `ExpenseNavHost` to use the new typed routes instead of string literals.
 - [x] T211 Create `AppShell` composable wrapping `ExpenseNavHost` with a `ModalNavigationDrawer` containing standard drawer items (Dashboard, Analytics, Settings).
-- [ ] T212 Update `MainActivity` to render `AppShell` instead of directly rendering `ExpenseNavHost`.
+- [x] T212 Update `MainActivity` to render `AppShell` instead of directly rendering `ExpenseNavHost`.
 - [ ] T213 Add Top App Bar to main screens with a hamburger menu icon wired to `DrawerState.open()`.
 
 ---
