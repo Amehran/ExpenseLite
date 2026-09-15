@@ -13,10 +13,15 @@ import com.amehran.expenselite.presentation.dashboard.DashboardScreen
 import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
 
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
+
 @Composable
 fun ExpenseNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
     NavHost(
         navController = navController,
