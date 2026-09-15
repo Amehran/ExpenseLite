@@ -125,10 +125,10 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T033 [P] Implement Dark/Light theme toggle via Preferences DataStore in app/src/main/java/com/example/expenselite/data/local/PreferencesManager.kt
+- [x] T033 [P] Implement Dark/Light theme toggle via Preferences DataStore in app/src/main/java/com/example/expenselite/data/local/PreferencesManager.kt
 - [x] T034 [P] Setup App Navigation Graph (NavHost) wrapping all screens above in app/src/main/java/com/example/expenselite/presentation/navigation/ExpenseNavHost.kt
-- [ ] T035 Add global error handling and Snackbar notifications in app/src/main/java/com/example/expenselite/presentation/MainActivity.kt
-- [ ] T036 Run `quickstart.md` validation scenarios manually
+- [x] T035 Add global error handling and Snackbar notifications in app/src/main/java/com/example/expenselite/presentation/MainActivity.kt
+- [x] T036 Run `quickstart.md` validation scenarios manually
 
 ---
 
