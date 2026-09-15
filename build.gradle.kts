@@ -11,7 +11,8 @@ plugins {
 sonar {
     properties {
         property("sonar.projectKey", "YourOrgKey_ExpenseLite")
-        property("sonar.organization", "your-github-org-or-handle")
+        property("sonar.projectName", "ExpenseLite")
+        property("sonar.organization", "amehran")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.exclusions", "**/build/**, **/*.png, **/*.jpg")
     }
