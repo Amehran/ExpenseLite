@@ -85,8 +85,8 @@ jobs:
       - name: Grant Gradle Execution Permission
         run: chmod +x gradlew
 
-      - name: Build Debug APK & Release Bundle
-        run: ./gradlew assembleDebug bundleRelease
+      - name: Run Tests, Jacoco & Build (APK & Bundle)
+        run: ./gradlew testDebugUnitTest jacocoTestReport assembleDebug bundleRelease
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
