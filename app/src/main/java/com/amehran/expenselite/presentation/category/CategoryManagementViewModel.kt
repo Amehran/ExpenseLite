@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.amehran.expenselite.domain.model.Category
 import com.amehran.expenselite.domain.repository.TransactionRepository
 import com.amehran.expenselite.domain.usecase.DeleteCategoryUseCase
+import com.amehran.expenselite.presentation.util.SnackbarController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,16 +38,15 @@ class CategoryManagementViewModel @Inject constructor(
             is CategoryManagementEvent.DeleteCategory -> {
                 deleteCategory(event.category)
             }
-            is CategoryManagementEvent.DismissError -> {
-                _uiState.value = _uiState.value.copy(errorMessage = null)
-            }
         }
     }
 
     private fun addCategory() {
         val name = _uiState.value.newCategoryName.trim()
         if (name.isBlank()) {
-            _uiState.value = _uiState.value.copy(errorMessage = "Category name cannot be empty")
+            viewModelScope.launch {
+                SnackbarController.showMessage("Category name cannot be empty")
+            }
             return
         }
 
@@ -59,9 +59,10 @@ class CategoryManagementViewModel @Inject constructor(
                     isSystemDefault = false,
                 )
                 repository.addCategory(newCategory)
-                _uiState.value = _uiState.value.copy(newCategoryName = "", errorMessage = null)
+                _uiState.value = _uiState.value.copy(newCategoryName = "")
+                SnackbarController.showMessage("Category added successfully")
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(errorMessage = "Failed to add category: ${e.message}")
+                SnackbarController.showMessage("Failed to add category: ${e.message}")
             }
         }
     }
@@ -70,10 +71,10 @@ class CategoryManagementViewModel @Inject constructor(
         viewModelScope.launch {
             deleteCategoryUseCase(category).fold(
                 onSuccess = {
-                    // Refresh handled automatically by Flow
+                    SnackbarController.showMessage("Category deleted")
                 },
                 onFailure = { error ->
-                    _uiState.value = _uiState.value.copy(errorMessage = error.message)
+                    SnackbarController.showMessage(error.message ?: "Failed to delete category")
                 },
             )
         }
@@ -82,12 +83,10 @@ class CategoryManagementViewModel @Inject constructor(
 
 data class CategoryManagementState(
     val newCategoryName: String = "",
-    val errorMessage: String? = null,
 )
 
 sealed interface CategoryManagementEvent {
     data class UpdateNewCategoryName(val name: String) : CategoryManagementEvent
     data object AddCategory : CategoryManagementEvent
     data class DeleteCategory(val category: Category) : CategoryManagementEvent
-    data object DismissError : CategoryManagementEvent
 }

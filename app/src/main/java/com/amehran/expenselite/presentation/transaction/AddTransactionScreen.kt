@@ -58,13 +58,6 @@ fun AddTransactionScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (uiState.errorMessage != null) {
-                Text(
-                    text = uiState.errorMessage!!,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-
             OutlinedTextField(
                 value = uiState.title,
                 onValueChange = { viewModel.onEvent(AddTransactionEvent.OnTitleChanged(it)) },

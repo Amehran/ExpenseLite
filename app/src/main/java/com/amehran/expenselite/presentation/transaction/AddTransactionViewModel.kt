@@ -7,6 +7,7 @@ import com.amehran.expenselite.domain.model.Expense
 import com.amehran.expenselite.domain.model.RecurrenceInterval
 import com.amehran.expenselite.domain.repository.TransactionRepository
 import com.amehran.expenselite.domain.usecase.AddTransactionUseCase
+import com.amehran.expenselite.presentation.util.SnackbarController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +39,6 @@ constructor(
             is AddTransactionEvent.OnTypeChanged -> _uiState.value = _uiState.value.copy(isIncome = event.isIncome)
             is AddTransactionEvent.OnRecurrenceChanged -> _uiState.value = _uiState.value.copy(recurrence = event.recurrence)
             is AddTransactionEvent.SaveTransaction -> saveTransaction()
-            is AddTransactionEvent.DismissError -> _uiState.value = _uiState.value.copy(errorMessage = null)
         }
     }
 
@@ -47,7 +47,9 @@ constructor(
         val amountCents = (state.amountString.toDoubleOrNull()?.times(100))?.toLong() ?: 0L
 
         if (state.selectedCategoryId == null) {
-            _uiState.value = state.copy(errorMessage = "Please select a category")
+            viewModelScope.launch {
+                SnackbarController.showMessage("Please select a category")
+            }
             return
         }
 
@@ -71,7 +73,8 @@ constructor(
                     _uiState.value = state.copy(isLoading = false, isSaved = true)
                 },
                 onFailure = { error ->
-                    _uiState.value = state.copy(isLoading = false, errorMessage = error.message ?: "Unknown error")
+                    _uiState.value = state.copy(isLoading = false)
+                    SnackbarController.showMessage(error.message ?: "Unknown error")
                 },
             )
         }
@@ -85,7 +88,6 @@ data class AddTransactionState(
     val isIncome: Boolean = false,
     val recurrence: RecurrenceInterval = RecurrenceInterval.NONE,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
     val isSaved: Boolean = false,
 )
 
@@ -101,6 +103,4 @@ sealed interface AddTransactionEvent {
     data class OnRecurrenceChanged(val recurrence: RecurrenceInterval) : AddTransactionEvent
 
     data object SaveTransaction : AddTransactionEvent
-
-    data object DismissError : AddTransactionEvent
 }
