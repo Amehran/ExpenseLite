@@ -2,6 +2,7 @@ package com.amehran.expenselite.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +13,7 @@ import com.amehran.expenselite.presentation.category.CategoryManagementScreen
 import com.amehran.expenselite.presentation.dashboard.DashboardScreen
 import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
+import kotlinx.coroutines.launch
 
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -23,6 +25,8 @@ fun ExpenseNavHost(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
+    val scope = rememberCoroutineScope()
+
     NavHost(
         navController = navController,
         startDestination = AppRoute.DashboardRoute,
@@ -32,6 +36,7 @@ fun ExpenseNavHost(
             DashboardScreen(
                 onNavigateToAddTransaction = { navController.navigate(AppRoute.AddEditRoute()) },
                 onNavigateToAnalytics = { navController.navigate(AppRoute.AnalyticsRoute) },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
             )
         }
 
@@ -50,13 +55,13 @@ fun ExpenseNavHost(
 
         composable<AppRoute.AnalyticsRoute> {
             AnalyticsScreen(
-                onNavigateBack = { navController.popBackStack() },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
             )
         }
 
         composable<AppRoute.SettingsRoute> {
             SettingsScreen(
-                onNavigateBack = { navController.popBackStack() },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
                 onNavigateToCategoryManagement = { navController.navigate(AppRoute.CategoryRoute) },
             )
         }
