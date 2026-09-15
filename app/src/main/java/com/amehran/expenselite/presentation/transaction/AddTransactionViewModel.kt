@@ -53,12 +53,16 @@ constructor(
             return
         }
 
+        val category = categories.value.find { it.id == state.selectedCategoryId }
+
         val expense =
             Expense(
                 id = 0,
                 title = state.title,
                 amountCents = amountCents,
                 categoryId = state.selectedCategoryId,
+                categoryName = category?.name ?: "",
+                categoryColorHex = category?.colorHex ?: "",
                 timestamp = System.currentTimeMillis(),
                 isIncome = state.isIncome,
                 isSubscription = state.recurrence != RecurrenceInterval.NONE,

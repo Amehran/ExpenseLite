@@ -15,5 +15,7 @@ sonar {
         property("sonar.organization", "amehran")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.exclusions", "**/build/**, **/*.png, **/*.jpg")
+        property("sonar.coverage.exclusions", "**/presentation/**, **/navigation/**, **/*Screen.kt, **/*Shell.kt, **/*Activity.kt, **/*Preview*.kt, **/di/**, **/data/local/entity/**, **/domain/model/**, **/DefaultData.kt")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.rootDir}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
     }
 }

@@ -45,6 +45,7 @@ import java.util.Locale
 fun DashboardScreen(
     onNavigateToAddTransaction: () -> Unit,
     onNavigateToAnalytics: () -> Unit,
+    onOpenDrawer: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -54,7 +55,7 @@ fun DashboardScreen(
             TopAppBar(
                 title = { Text("ExpenseLite") },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Open drawer */ }) {
+                    IconButton(onClick = onOpenDrawer) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu")
                     }
                 },

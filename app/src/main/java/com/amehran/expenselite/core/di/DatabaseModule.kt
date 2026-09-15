@@ -26,6 +26,7 @@ object DatabaseModule {
             ExpenseDatabase::class.java,
             ExpenseDatabase.DATABASE_NAME,
         )
+            .addMigrations(ExpenseDatabase.MIGRATION_1_2)
             .addCallback(callback)
             .build()
     }

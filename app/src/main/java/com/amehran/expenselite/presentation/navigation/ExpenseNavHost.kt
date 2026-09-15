@@ -1,7 +1,11 @@
 package com.amehran.expenselite.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,47 +16,52 @@ import com.amehran.expenselite.presentation.category.CategoryManagementScreen
 import com.amehran.expenselite.presentation.dashboard.DashboardScreen
 import com.amehran.expenselite.presentation.settings.SettingsScreen
 import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun ExpenseNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screen.Dashboard.route,
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
+    val scope = rememberCoroutineScope()
+
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = AppRoute.DashboardRoute,
         modifier = modifier.fillMaxSize(),
     ) {
-        composable(Screen.Dashboard.route) {
+        composable<AppRoute.DashboardRoute> {
             DashboardScreen(
-                onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) },
-                onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) },
+                onNavigateToAddTransaction = { navController.navigate(AppRoute.AddEditRoute()) },
+                onNavigateToAnalytics = { navController.navigate(AppRoute.AnalyticsRoute) },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
             )
         }
 
-        composable(Screen.AddTransaction.route) {
+        composable<AppRoute.AddEditRoute> {
+            // Note: If you need to read expenseId, it's inside it.toRoute<AppRoute.AddEditRoute>().expenseId
             AddTransactionScreen(
                 onNavigateBack = { navController.popBackStack() },
             )
         }
 
-        composable(Screen.CategoryManagement.route) {
+        composable<AppRoute.CategoryRoute> {
             CategoryManagementScreen(
                 onNavigateBack = { navController.popBackStack() },
             )
         }
 
-        composable(Screen.Analytics.route) {
+        composable<AppRoute.AnalyticsRoute> {
             AnalyticsScreen(
-                onNavigateBack = { navController.popBackStack() },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
             )
         }
 
-        composable(Screen.Settings.route) {
+        composable<AppRoute.SettingsRoute> {
             SettingsScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToCategoryManagement = { navController.navigate(Screen.CategoryManagement.route) },
+                onOpenDrawer = { scope.launch { drawerState.open() } },
+                onNavigateToCategoryManagement = { navController.navigate(AppRoute.CategoryRoute) },
             )
         }
     }
