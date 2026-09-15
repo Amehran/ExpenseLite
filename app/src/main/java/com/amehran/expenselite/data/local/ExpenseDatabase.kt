@@ -10,7 +10,7 @@ import com.amehran.expenselite.data.local.entity.ExpenseEntity
 @Database(
     entities = [CategoryEntity::class, ExpenseEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class ExpenseDatabase : RoomDatabase() {
     abstract val categoryDao: CategoryDao

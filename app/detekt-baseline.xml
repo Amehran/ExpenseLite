@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ForbiddenComment:DashboardScreen.kt$/* TODO: Open drawer */</ID>
     <ID>ImplicitDefaultLocale:DashboardScreen.kt$String.format("%s$%.2f", sign, expense.amountCents / 100.0)</ID>
     <ID>ImplicitDefaultLocale:DashboardViewModel.kt$DashboardViewModel$String.format("$%.2f", dollars)</ID>
-    <ID>LongMethod:AddTransactionScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun AddTransactionScreen( onNavigateBack: () -&gt; Unit, viewModel: AddTransactionViewModel = hiltViewModel() )</ID>
+    <ID>LongMethod:AddTransactionScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun AddTransactionScreen( onNavigateBack: () -&gt; Unit, viewModel: AddTransactionViewModel = hiltViewModel(), )</ID>
     <ID>MagicNumber:AddTransactionViewModel.kt$AddTransactionViewModel$100</ID>
     <ID>MagicNumber:AddTransactionViewModel.kt$AddTransactionViewModel$5000</ID>
     <ID>MagicNumber:Color.kt$0xFF625b71</ID>
@@ -23,19 +23,9 @@
     <ID>MaxLineLength:AddTransactionViewModel.kt$AddTransactionViewModel$is AddTransactionEvent.OnCategorySelected -&gt; _uiState.value = _uiState.value.copy(selectedCategoryId = event.categoryId)</ID>
     <ID>MaxLineLength:AddTransactionViewModel.kt$AddTransactionViewModel$is AddTransactionEvent.OnRecurrenceChanged -&gt; _uiState.value = _uiState.value.copy(recurrence = event.recurrence)</ID>
     <ID>MaximumLineLength:AddTransactionViewModel.kt$AddTransactionViewModel$ </ID>
-    <ID>NoWildcardImports:AddTransactionScreen.kt$import androidx.compose.foundation.layout.*</ID>
-    <ID>NoWildcardImports:AddTransactionScreen.kt$import androidx.compose.material3.*</ID>
-    <ID>NoWildcardImports:AddTransactionScreen.kt$import androidx.compose.runtime.*</ID>
-    <ID>NoWildcardImports:DashboardScreen.kt$import androidx.compose.foundation.layout.*</ID>
-    <ID>NoWildcardImports:DashboardScreen.kt$import androidx.compose.material3.*</ID>
     <ID>ReturnCount:AddTransactionUseCase.kt$AddTransactionUseCase$suspend operator fun invoke(expense: Expense): Result&lt;Long&gt;</ID>
     <ID>TooGenericExceptionCaught:AddTransactionUseCase.kt$AddTransactionUseCase$e: Exception</ID>
     <ID>UnusedParameter:HomeCompose.kt$onItemClick: (String) -&gt; Unit</ID>
     <ID>UnusedParameter:HomeCompose.kt$onRefresh: () -&gt; Unit</ID>
-    <ID>WildcardImport:AddTransactionScreen.kt$import androidx.compose.foundation.layout.*</ID>
-    <ID>WildcardImport:AddTransactionScreen.kt$import androidx.compose.material3.*</ID>
-    <ID>WildcardImport:AddTransactionScreen.kt$import androidx.compose.runtime.*</ID>
-    <ID>WildcardImport:DashboardScreen.kt$import androidx.compose.foundation.layout.*</ID>
-    <ID>WildcardImport:DashboardScreen.kt$import androidx.compose.material3.*</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -12,8 +12,10 @@ navigationCompose = "2.8.5"
 hilt = "2.54"
 hiltNavigationCompose = "1.2.0"
 room = "2.6.1"
-ktlint = "12.1.2"
-detekt = "1.23.7"
+ktlint = "14.2.0"
+detekt = "1.23.8"
+material3 = "1.4.0"
+lint-gradle = "31.7.3"
 
 [libraries]
 # AndroidX & Compose Core
@@ -26,6 +28,8 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 # Navigation Compose
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
@@ -38,6 +42,9 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+
+android-lint-gradle = { module = "com.android.tools.lint:lint-gradle", version.ref = "lint-gradle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -45,6 +52,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 
 # Annotation Processors & DI Plugins
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class TransactionRepositoryImpl @Inject constructor(
+class TransactionRepositoryImpl
+@Inject
+constructor(
     private val expenseDao: ExpenseDao,
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
 ) : TransactionRepository {
-
     override fun getAllExpenses(): Flow<List<Expense>> {
         return expenseDao.getAllExpenses().map { entities ->
             entities.map { it.toDomainModel() }
@@ -60,7 +61,7 @@ class TransactionRepositoryImpl @Inject constructor(
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
             recurrenceInterval = RecurrenceInterval.valueOf(this.recurrenceInterval),
-            isPaused = this.isPaused
+            isPaused = this.isPaused,
         )
     }
 
@@ -74,7 +75,7 @@ class TransactionRepositoryImpl @Inject constructor(
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
             recurrenceInterval = this.recurrenceInterval.name,
-            isPaused = this.isPaused
+            isPaused = this.isPaused,
         )
     }
 
@@ -83,7 +84,7 @@ class TransactionRepositoryImpl @Inject constructor(
             id = this.id,
             name = this.name,
             iconResName = this.iconResName,
-            isSystemDefault = this.isSystemDefault
+            isSystemDefault = this.isSystemDefault,
         )
     }
 }

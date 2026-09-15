@@ -16,8 +16,10 @@ config:
 
 processors:
   active: true
-  exclude:
-    - 'DetektProgressListener'
+  excludes: '**/build/**,**/resources/**,**/target/**,.gradle/**'
+
+  #  exclude:
+  #    - 'DetektProgressListener'
   # - 'KtFileCountProcessor'
   # - 'PackageCountProcessor'
   # - 'ClassCountProcessor'

@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             ExpenseLiteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ExpenseNavHost(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }

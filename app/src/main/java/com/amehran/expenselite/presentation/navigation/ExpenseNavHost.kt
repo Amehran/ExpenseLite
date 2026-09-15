@@ -15,22 +15,22 @@ import com.amehran.expenselite.presentation.transaction.AddTransactionScreen
 fun ExpenseNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screen.Dashboard.route
+    startDestination: String = Screen.Dashboard.route,
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         composable(Screen.Dashboard.route) {
             DashboardScreen(
-                onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) }
+                onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) },
             )
         }
 
         composable(Screen.AddTransaction.route) {
             AddTransactionScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
             )
         }
 

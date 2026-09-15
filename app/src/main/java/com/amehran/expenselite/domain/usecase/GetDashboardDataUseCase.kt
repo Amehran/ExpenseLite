@@ -10,11 +10,13 @@ data class DashboardData(
     val totalBalanceCents: Long,
     val totalIncomeCents: Long,
     val totalExpenseCents: Long,
-    val recentTransactions: List<Expense>
+    val recentTransactions: List<Expense>,
 )
 
-class GetDashboardDataUseCase @Inject constructor(
-    private val repository: TransactionRepository
+class GetDashboardDataUseCase
+@Inject
+constructor(
+    private val repository: TransactionRepository,
 ) {
     operator fun invoke(): Flow<DashboardData> {
         return repository.getAllExpenses().map { expenses ->
@@ -32,7 +34,7 @@ class GetDashboardDataUseCase @Inject constructor(
                 totalBalanceCents = income - expense,
                 totalIncomeCents = income,
                 totalExpenseCents = expense,
-                recentTransactions = expenses.take(10) // Show last 10
+                recentTransactions = expenses.take(10), // Show last 10
             )
         }
     }

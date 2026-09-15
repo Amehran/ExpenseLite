@@ -4,7 +4,7 @@ data class Category(
     val id: Long,
     val name: String,
     val iconResName: String,
-    val isSystemDefault: Boolean
+    val isSystemDefault: Boolean,
 )
 
 data class Expense(
@@ -16,9 +16,11 @@ data class Expense(
     val isIncome: Boolean,
     val isSubscription: Boolean,
     val recurrenceInterval: RecurrenceInterval,
-    val isPaused: Boolean
+    val isPaused: Boolean,
 )
 
 enum class RecurrenceInterval {
-    NONE, MONTHLY, YEARLY
+    NONE,
+    MONTHLY,
+    YEARLY,
 }

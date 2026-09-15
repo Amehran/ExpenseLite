@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.spotless)
 }
 
 android {
@@ -28,7 +28,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -42,15 +42,46 @@ android {
     buildFeatures {
         compose = true
     }
-    // app/build.gradle.kts
-    detekt {
-        buildUponDefaultConfig = true
-        ignoreFailures = true // Prevents detekt from breaking local & CI builds
-        config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+}
+
+// Spotless is a top-level extension (must be outside android { ... })
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("$buildDir/**/*.kt")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
+                "ktlint_standard_value-parameter-comment" to "disabled",
+                "ktlint_standard_value-argument-comment" to "disabled",
+            ),
+        )
+    }
+}
+detekt {
+    buildUponDefaultConfig = true
+    ignoreFailures = true // Prevents Detekt from breaking the build on warnings
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+
+    val baselineFile = file("$rootDir/config/detekt/baseline.xml")
+    if (baselineFile.exists()) {
+        baseline = baselineFile
+    }
+}
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.file("reports/detekt/detekt.html"))
+
+        xml.required.set(false)
+        txt.required.set(false)
+        sarif.required.set(false)
     }
 }
 
 dependencies {
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.core)
     // Core & Compose BOM
     detektPlugins(libs.detekt.formatting)
     implementation(libs.androidx.core.ktx)

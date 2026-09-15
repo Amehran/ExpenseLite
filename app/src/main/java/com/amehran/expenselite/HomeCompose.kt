@@ -17,14 +17,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun HomeScreenRoute(
     onNavigateToDetail: (String) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     HomeScreen(
         uiState = uiState,
         onItemClick = onNavigateToDetail,
-        onRefresh = viewModel::refreshTasks
+        onRefresh = viewModel::refreshTasks,
     )
 }
 
@@ -34,7 +34,7 @@ fun HomeScreen(
     uiState: HomeUiState,
     onItemClick: (String) -> Unit,
     onRefresh: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         when (uiState) {
@@ -44,7 +44,7 @@ fun HomeScreen(
             is HomeUiState.Error -> {
                 Text(
                     text = uiState.message,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
             is HomeUiState.Success -> {

@@ -9,10 +9,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
-
     @Singleton
     @Binds
-    abstract fun bindTaskRepository(
-        repository: DummyTaskRepository
-    ): TaskRepository
+    abstract fun bindTaskRepository(repository: DummyTaskRepository): TaskRepository
 }

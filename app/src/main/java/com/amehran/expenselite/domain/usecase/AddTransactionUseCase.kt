@@ -4,8 +4,10 @@ import com.amehran.expenselite.domain.model.Expense
 import com.amehran.expenselite.domain.repository.TransactionRepository
 import javax.inject.Inject
 
-class AddTransactionUseCase @Inject constructor(
-    private val repository: TransactionRepository
+class AddTransactionUseCase
+@Inject
+constructor(
+    private val repository: TransactionRepository,
 ) {
     suspend operator fun invoke(expense: Expense): Result<Long> {
         if (expense.amountCents <= 0) {
