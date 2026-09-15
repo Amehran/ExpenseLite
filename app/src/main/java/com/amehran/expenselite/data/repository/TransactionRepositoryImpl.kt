@@ -69,6 +69,8 @@ constructor(
             title = this.title,
             amountCents = this.amountCents,
             categoryId = this.categoryId,
+            categoryName = this.categoryName,
+            categoryColorHex = this.categoryColorHex,
             timestamp = this.timestamp,
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
@@ -83,6 +85,8 @@ constructor(
             title = this.title,
             amountCents = this.amountCents,
             categoryId = this.categoryId,
+            categoryName = this.categoryName,
+            categoryColorHex = this.categoryColorHex,
             timestamp = this.timestamp,
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
@@ -97,6 +101,7 @@ constructor(
             name = this.name,
             iconResName = this.iconResName,
             isSystemDefault = this.isSystemDefault,
+            colorHex = this.colorHex,
         )
     }
 
@@ -106,6 +111,7 @@ constructor(
             name = this.name,
             iconResName = this.iconResName,
             isSystemDefault = this.isSystemDefault,
+            colorHex = this.colorHex,
         )
     }
 }
