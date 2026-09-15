@@ -1,13 +1,13 @@
 package com.amehran.expenselite.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.amehran.expenselite.presentation.analytics.AnalyticsScreen
 import com.amehran.expenselite.presentation.category.CategoryManagementScreen
 import com.amehran.expenselite.presentation.dashboard.DashboardScreen
 import com.amehran.expenselite.presentation.settings.SettingsScreen
@@ -27,6 +27,7 @@ fun ExpenseNavHost(
         composable(Screen.Dashboard.route) {
             DashboardScreen(
                 onNavigateToAddTransaction = { navController.navigate(Screen.AddTransaction.route) },
+                onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) },
             )
         }
 
@@ -43,7 +44,9 @@ fun ExpenseNavHost(
         }
 
         composable(Screen.Analytics.route) {
-            Text("Analytics (Coming Soon)")
+            AnalyticsScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable(Screen.Settings.route) {

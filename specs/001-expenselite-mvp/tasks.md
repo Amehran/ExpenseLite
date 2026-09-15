@@ -115,9 +115,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T030 [P] [US4] Create `GetAnalyticsDataUseCase` in app/src/main/java/com/example/expenselite/domain/usecase/GetAnalyticsDataUseCase.kt
-- [ ] T031 [US4] Implement `DonutChart` Custom Compose Canvas in app/src/main/java/com/example/expenselite/presentation/analytics/components/DonutChart.kt
-- [ ] T032 [US4] Implement `AnalyticsScreen` combining the chart and legends in app/src/main/java/com/example/expenselite/presentation/analytics/AnalyticsScreen.kt
+- [x] T030 [P] [US4] Create `GetAnalyticsDataUseCase` in app/src/main/java/com/example/expenselite/domain/usecase/GetAnalyticsDataUseCase.kt
+- [x] T031 [US4] Implement `DonutChart` Custom Compose Canvas in app/src/main/java/com/example/expenselite/presentation/analytics/components/DonutChart.kt
+- [x] T032 [US4] Implement `AnalyticsScreen` combining the chart and legends in app/src/main/java/com/example/expenselite/presentation/analytics/AnalyticsScreen.kt
 
 ---
 

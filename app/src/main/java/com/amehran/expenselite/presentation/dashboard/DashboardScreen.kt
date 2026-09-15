@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,6 +44,7 @@ import java.util.Locale
 @Composable
 fun DashboardScreen(
     onNavigateToAddTransaction: () -> Unit,
+    onNavigateToAnalytics: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -54,6 +56,11 @@ fun DashboardScreen(
                 navigationIcon = {
                     IconButton(onClick = { /* TODO: Open drawer */ }) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToAnalytics) {
+                        Icon(Icons.Default.Search, contentDescription = "Analytics")
                     }
                 },
             )
