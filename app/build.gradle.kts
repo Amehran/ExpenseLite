@@ -157,6 +157,7 @@ dependencies {
 
     // Testing
     testImplementation("org.json:json:20240303")
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Compose UI Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
