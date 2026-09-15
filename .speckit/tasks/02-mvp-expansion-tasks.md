@@ -9,8 +9,8 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 
 - [x] T201 Update `ExpenseEntity`: Add `categoryName` (String, default `""`) and `categoryColorHex` (String, default `""`).
 - [x] T202 Update `CategoryEntity`: Add `colorHex` (String) to support colors.
-- [ ] T203 Create `MIGRATION_1_2` in `ExpenseDatabase` with `ALTER TABLE` scripts for `expenses` (add `categoryName`, `categoryColorHex`) and `categories` (add `colorHex`).
-- [ ] T204 Bump database version to `2` and ensure `exportSchema = true` is set with the path configured in KSP.
+- [x] T203 Create `MIGRATION_1_2` in `ExpenseDatabase` with `ALTER TABLE` scripts for `expenses` (add `categoryName`, `categoryColorHex`) and `categories` (add `colorHex`).
+- [x] T204 Bump database version to `2` and ensure `exportSchema = true` is set with the path configured in KSP.
 - [ ] T205 Write Android instrumented test `MigrationTestHelper` to verify `MIGRATION_1_2` preserves existing data and populates new columns.
 - [ ] T206 Update `DatabaseCallback` to seed the default categories with specific hex colors (Housing: #5C6BC0, Food: #4CAF50, etc.).
 - [ ] T207 Update `ExpenseEntity.toDomain` and `Expense.toEntity` mappers to accommodate new fields. Update `AddTransactionUseCase` / ViewModel to copy category details onto the `ExpenseEntity` when saving.

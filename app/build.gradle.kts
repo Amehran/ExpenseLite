@@ -44,6 +44,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 // Spotless is a top-level extension (must be outside android { ... })
 spotless {
     // Only check files modified since origin/dev
