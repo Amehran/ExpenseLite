@@ -79,6 +79,7 @@ constructor(
                     TransactionFilter.Category(expense.categoryId, name)
                 }
                 .distinctBy { it.id }
+                .filterNot { it.name.equals("Income", ignoreCase = true) }
                 .sortedBy { it.name }
 
             val availableFilters = listOf(
