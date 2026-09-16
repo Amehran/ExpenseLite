@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface TransactionRepository {
     fun getAllExpenses(): Flow<List<Expense>>
 
+    fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>>
+
     fun getAllCategories(): Flow<List<Category>>
 
     suspend fun getExpenseById(id: Long): Expense?

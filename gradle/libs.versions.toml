@@ -53,6 +53,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 
 android-lint-gradle = { module = "com.android.tools.lint:lint-gradle", version.ref = "lint-gradle" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = "1.9.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

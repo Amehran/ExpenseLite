@@ -42,6 +42,8 @@ class ExportDataUseCaseTest {
                     ),
                 ),
             )
+            override fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<ExpenseEntity>> =
+                flowOf(emptyList())
             override suspend fun insertExpense(expense: ExpenseEntity): Long = 1L
             override suspend fun updateExpense(expense: ExpenseEntity) {}
             override suspend fun deleteExpense(expense: ExpenseEntity) {}

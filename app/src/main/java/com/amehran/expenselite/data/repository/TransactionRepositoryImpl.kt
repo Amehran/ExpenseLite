@@ -24,6 +24,12 @@ constructor(
         }
     }
 
+    override fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>> {
+        return expenseDao.getExpensesByDateRange(startTimestamp, endTimestamp).map { entities ->
+            entities.map { it.toDomainModel() }
+        }
+    }
+
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories().map { entities ->
             entities.map { it.toDomainModel() }
