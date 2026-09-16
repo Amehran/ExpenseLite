@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,9 +19,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,11 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.amehran.expenselite.domain.usecase.ConflictStrategy
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onOpenDrawer: () -> Unit,
@@ -58,78 +61,170 @@ fun SettingsScreen(
     val importLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
     ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.openInputStream(it)?.let { inputStream ->
-                viewModel.importData(inputStream)
-            }
-        }
+        uri?.let { viewModel.onSelectImportFile(it) }
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Settings") },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+        topBar = { SettingsTopAppBar(onOpenDrawer = onOpenDrawer) },
+    ) { padding ->
+        SettingsContent(
+            modifier = Modifier.padding(padding),
+            isDarkMode = isDarkMode,
+            isLoading = uiState.isLoading,
+            onToggleDarkMode = viewModel::toggleDarkMode,
+            onNavigateToCategoryManagement = onNavigateToCategoryManagement,
+            onExportClick = {
+                val date = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
+                exportLauncher.launch("expenselite_backup_$date.json")
+            },
+            onImportClick = { importLauncher.launch(arrayOf("application/json")) },
+        )
+
+        if (uiState.showConflictDialog && uiState.pendingImportUri != null) {
+            val pendingUri = uiState.pendingImportUri!!
+            ImportConflictDialog(
+                onDismiss = viewModel::onDismissConflictDialog,
+                onSelectStrategy = { strategy ->
+                    context.contentResolver.openInputStream(pendingUri)?.let { inputStream ->
+                        viewModel.onConfirmImport(strategy, inputStream)
                     }
                 },
             )
-        },
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text("Preferences", style = MaterialTheme.typography.titleMedium)
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text("Dark Mode")
-                Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = { viewModel.toggleDarkMode(it) },
-                )
-            }
-
-            Text("Data Management", style = MaterialTheme.typography.titleMedium)
-
-            Button(
-                onClick = onNavigateToCategoryManagement,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text("Manage Categories")
-            }
-
-            Button(
-                onClick = {
-                    val date = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
-                    exportLauncher.launch("expenselite_backup_$date.json")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading,
-            ) {
-                Text("Export Backup (JSON)")
-            }
-
-            Button(
-                onClick = { importLauncher.launch(arrayOf("application/json")) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-            ) {
-                Text("Import Backup (JSON)")
-            }
-
-            if (uiState.isLoading) {
-                CircularProgressIndicator()
-            }
         }
     }
+}
+
+@Composable
+private fun SettingsContent(
+    modifier: Modifier = Modifier,
+    isDarkMode: Boolean,
+    isLoading: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit,
+    onNavigateToCategoryManagement: () -> Unit,
+    onExportClick: () -> Unit,
+    onImportClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        PreferencesSection(
+            isDarkMode = isDarkMode,
+            onToggleDarkMode = onToggleDarkMode,
+        )
+
+        DataManagementSection(
+            isLoading = isLoading,
+            onNavigateToCategoryManagement = onNavigateToCategoryManagement,
+            onExportClick = onExportClick,
+            onImportClick = onImportClick,
+        )
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingsTopAppBar(onOpenDrawer: () -> Unit) {
+    TopAppBar(
+        title = { Text("Settings") },
+        navigationIcon = {
+            IconButton(onClick = onOpenDrawer) {
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
+            }
+        },
+    )
+}
+
+@Composable
+private fun PreferencesSection(
+    isDarkMode: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit,
+) {
+    Text("Preferences", style = MaterialTheme.typography.titleMedium)
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text("Dark Mode")
+        Switch(
+            checked = isDarkMode,
+            onCheckedChange = onToggleDarkMode,
+        )
+    }
+}
+
+@Composable
+private fun DataManagementSection(
+    isLoading: Boolean,
+    onNavigateToCategoryManagement: () -> Unit,
+    onExportClick: () -> Unit,
+    onImportClick: () -> Unit,
+) {
+    Text("Data Management", style = MaterialTheme.typography.titleMedium)
+
+    Button(
+        onClick = onNavigateToCategoryManagement,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text("Manage Categories")
+    }
+
+    Button(
+        onClick = onExportClick,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = !isLoading,
+    ) {
+        Text("Export Backup (JSON)")
+    }
+
+    Button(
+        onClick = onImportClick,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = !isLoading,
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+    ) {
+        Text("Import Backup (JSON)")
+    }
+}
+
+@Composable
+private fun ImportConflictDialog(
+    onDismiss: () -> Unit,
+    onSelectStrategy: (ConflictStrategy) -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Import Backup") },
+        text = {
+            Text("How would you like to handle existing data during import?")
+        },
+        confirmButton = {
+            Button(
+                onClick = { onSelectStrategy(ConflictStrategy.MERGE) },
+            ) {
+                Text("Merge")
+            }
+        },
+        dismissButton = {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
+                OutlinedButton(
+                    onClick = { onSelectStrategy(ConflictStrategy.OVERWRITE) },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                ) {
+                    Text("Overwrite")
+                }
+            }
+        },
+    )
 }

@@ -12,12 +12,15 @@ class ExportDataUseCase @Inject constructor(
     private val categoryDao: CategoryDao,
     private val expenseDao: ExpenseDao,
 ) {
+    @Suppress("TooGenericExceptionCaught")
     suspend operator fun invoke(outputStream: OutputStream): Result<Unit> {
         return try {
             val categories = categoryDao.getAllCategories().first()
             val expenses = expenseDao.getAllExpenses().first()
 
-            val rootJson = JSONObject()
+            val rootJson = JSONObject().apply {
+                put("schemaVersion", SCHEMA_VERSION)
+            }
 
             // Serialize Categories
             val categoriesArray = JSONArray()
@@ -27,6 +30,7 @@ class ExportDataUseCase @Inject constructor(
                     put("name", category.name)
                     put("iconResName", category.iconResName)
                     put("isSystemDefault", category.isSystemDefault)
+                    put("colorHex", category.colorHex)
                 }
                 categoriesArray.put(catJson)
             }
@@ -40,6 +44,8 @@ class ExportDataUseCase @Inject constructor(
                     put("title", expense.title)
                     put("amountCents", expense.amountCents)
                     put("categoryId", expense.categoryId)
+                    put("categoryName", expense.categoryName)
+                    put("categoryColorHex", expense.categoryColorHex)
                     put("timestamp", expense.timestamp)
                     put("isIncome", expense.isIncome)
                     put("isSubscription", expense.isSubscription)
@@ -58,5 +64,9 @@ class ExportDataUseCase @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    companion object {
+        const val SCHEMA_VERSION = 2
     }
 }

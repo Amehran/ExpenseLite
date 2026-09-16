@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.amehran.expenselite.domain.usecase.CategorySpend
 
+@Suppress("MagicNumber")
 @Composable
 fun DonutChart(
     data: List<Pair<CategorySpend, Color>>,
@@ -62,7 +63,7 @@ fun DonutChart(
             }
         }
 
-        val totalSpendString = String.format("$%.2f", totalSpend / 100.0)
+        val totalSpendString = String.format(java.util.Locale.US, "$%.2f", totalSpend / 100.0)
         Text(
             text = totalSpendString,
             style = MaterialTheme.typography.titleLarge,

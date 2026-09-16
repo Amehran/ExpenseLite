@@ -43,25 +43,25 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 ## Phase 4 — Analytics View Enhancements
 **Purpose**: Month selection, empty states, and visual polishing.
 
-- [ ] T219 Update `AnalyticsScreen` to include the month selector (Prev/Next chevrons) to change the `monthOffset`.
-- [ ] T220 Update `DonutChart` rendering to use the new `categoryColorHex` from the DB instead of generating random/hardcoded colors.
-- [ ] T221 Add a robust empty state for `AnalyticsScreen` when the selected month has zero expenses.
+- [x] T219 Update `AnalyticsScreen` to include the month selector (Prev/Next chevrons) to change the `monthOffset`.
+- [x] T220 Update `DonutChart` rendering to use the new `categoryColorHex` from the DB instead of generating random/hardcoded colors.
+- [x] T221 Add a robust empty state for `AnalyticsScreen` when the selected month has zero expenses.
 
 ---
 
 ## Phase 5 — Data Portability (Export/Import with SAF)
 **Purpose**: Resilient local backup with schema versions and conflict resolution.
 
-- [ ] T222 Update `ExportDataUseCase` to serialize output as JSON with a `"schemaVersion": 2` top-level field.
-- [ ] T223 Refactor `ImportDataUseCase` to parse the `"schemaVersion"` and accept a `ConflictStrategy` (`Merge` or `Overwrite`).
-- [ ] T224 Ensure `ImportDataUseCase` executes all inserts wrapped inside a Room `@Transaction` block to ensure atomicity.
-- [ ] T225 Update `SettingsViewModel` with state machine: `isExporting`, `isImporting`, `showConflictDialog`, `pendingImportUri`.
-- [ ] T226 Update `SettingsScreen` to render an `AlertDialog` for Merge vs Overwrite selection when an import file is selected.
-- [ ] T227 Add `ActivityResultLauncher` logic to handle SAF intents without keeping persistable permissions.
+- [x] T222 Update `ExportDataUseCase` to serialize output as JSON with a `"schemaVersion": 2` top-level field.
+- [x] T223 Refactor `ImportDataUseCase` to parse the `"schemaVersion"` and accept a `ConflictStrategy` (`Merge` or `Overwrite`).
+- [x] T224 Ensure `ImportDataUseCase` executes all inserts wrapped inside a Room `@Transaction` block to ensure atomicity.
+- [x] T225 Update `SettingsViewModel` with state machine: `isExporting`, `isImporting`, `showConflictDialog`, `pendingImportUri`.
+- [x] T226 Update `SettingsScreen` to render an `AlertDialog` for Merge vs Overwrite selection when an import file is selected.
+- [x] T227 Add `ActivityResultLauncher` logic to handle SAF intents without keeping persistable permissions.
 
 ---
 
 ## Phase 6 — Verification & Polish
-- [ ] T228 Run full test suite including unit tests and Compose rules.
-- [ ] T229 Verify export→wipe→import round-trip works correctly using both Merge and Overwrite strategies.
-- [ ] T230 Run `./gradlew ktlintCheck detekt assembleDebug bundleRelease` to verify CI standards and minification.
+- [x] T228 Run full test suite including unit tests and Compose rules.
+- [x] T229 Verify export→wipe→import round-trip works correctly using both Merge and Overwrite strategies.
+- [x] T230 Run `./gradlew ktlintCheck detekt assembleDebug bundleRelease` to verify CI standards and minification.
