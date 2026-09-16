@@ -4,16 +4,23 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,13 +31,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amehran.expenselite.domain.usecase.ConflictStrategy
@@ -123,7 +130,9 @@ private fun SettingsContent(
         )
 
         if (isLoading) {
-            CircularProgressIndicator()
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
     }
 }
@@ -131,8 +140,8 @@ private fun SettingsContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsTopAppBar(onOpenDrawer: () -> Unit) {
-    TopAppBar(
-        title = { Text("Settings") },
+    CenterAlignedTopAppBar(
+        title = { Text("Settings", fontWeight = FontWeight.Bold) },
         navigationIcon = {
             IconButton(onClick = onOpenDrawer) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
@@ -146,18 +155,46 @@ private fun PreferencesSection(
     isDarkMode: Boolean,
     onToggleDarkMode: (Boolean) -> Unit,
 ) {
-    Text("Preferences", style = MaterialTheme.typography.titleMedium)
-
-    Row(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Text("Dark Mode")
-        Switch(
-            checked = isDarkMode,
-            onCheckedChange = onToggleDarkMode,
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Text(
+                text = "Preferences",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column {
+                    Text(
+                        text = "Dark Mode",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Text(
+                        text = "Enable dark background colors",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Switch(
+                    checked = isDarkMode,
+                    onCheckedChange = onToggleDarkMode,
+                )
+            }
+        }
     }
 }
 
@@ -168,30 +205,51 @@ private fun DataManagementSection(
     onExportClick: () -> Unit,
     onImportClick: () -> Unit,
 ) {
-    Text("Data Management", style = MaterialTheme.typography.titleMedium)
-
-    Button(
-        onClick = onNavigateToCategoryManagement,
+    Card(
         modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Text("Manage Categories")
-    }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                text = "Data Management",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
 
-    Button(
-        onClick = onExportClick,
-        modifier = Modifier.fillMaxWidth(),
-        enabled = !isLoading,
-    ) {
-        Text("Export Backup (JSON)")
-    }
+            Button(
+                onClick = onNavigateToCategoryManagement,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text("Manage Categories")
+            }
 
-    Button(
-        onClick = onImportClick,
-        modifier = Modifier.fillMaxWidth(),
-        enabled = !isLoading,
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-    ) {
-        Text("Import Backup (JSON)")
+            OutlinedButton(
+                onClick = onExportClick,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading,
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text("Export Backup (JSON)")
+            }
+
+            Button(
+                onClick = onImportClick,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            ) {
+                Text("Import Backup (JSON)")
+            }
+        }
     }
 }
 
@@ -202,13 +260,14 @@ private fun ImportConflictDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Import Backup") },
+        title = { Text("Import Backup", fontWeight = FontWeight.Bold) },
         text = {
             Text("How would you like to handle existing data during import?")
         },
         confirmButton = {
             Button(
                 onClick = { onSelectStrategy(ConflictStrategy.MERGE) },
+                shape = RoundedCornerShape(10.dp),
             ) {
                 Text("Merge")
             }
@@ -221,6 +280,7 @@ private fun ImportConflictDialog(
                 OutlinedButton(
                     onClick = { onSelectStrategy(ConflictStrategy.OVERWRITE) },
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                    shape = RoundedCornerShape(10.dp),
                 ) {
                     Text("Overwrite")
                 }
