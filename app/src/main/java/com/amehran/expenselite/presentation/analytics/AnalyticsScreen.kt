@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -73,14 +72,14 @@ fun parseCategoryColor(hex: String, fallbackIndex: Int): Color {
 
 @Composable
 fun AnalyticsScreen(
-    onOpenDrawer: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: AnalyticsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
-            AnalyticsTopAppBar(onOpenDrawer = onOpenDrawer)
+            AnalyticsTopAppBar(onNavigateBack = onNavigateBack)
         },
     ) { padding ->
         Box(
@@ -106,12 +105,12 @@ fun AnalyticsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AnalyticsTopAppBar(onOpenDrawer: () -> Unit) {
+private fun AnalyticsTopAppBar(onNavigateBack: () -> Unit) {
     CenterAlignedTopAppBar(
         title = { Text("Analytics", fontWeight = FontWeight.Bold) },
         navigationIcon = {
-            IconButton(onClick = onOpenDrawer) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu")
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
     )

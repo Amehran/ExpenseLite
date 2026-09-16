@@ -55,7 +55,7 @@ fun ExpenseNavHost(
 
         composable<AppRoute.AnalyticsRoute> {
             AnalyticsScreen(
-                onOpenDrawer = { scope.launch { drawerState.open() } },
+                onNavigateBack = { navController.popBackStack() },
             )
         }
 
