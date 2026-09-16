@@ -31,4 +31,7 @@ interface ExpenseDao {
 
     @Query("UPDATE expenses SET categoryId = 1 WHERE categoryId = :oldCategoryId")
     suspend fun reassignExpensesToUncategorized(oldCategoryId: Long)
+
+    @Query("DELETE FROM expenses")
+    suspend fun deleteAllExpenses()
 }
