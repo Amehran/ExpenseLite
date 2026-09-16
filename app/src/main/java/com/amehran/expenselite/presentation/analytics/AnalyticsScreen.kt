@@ -11,23 +11,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -61,7 +65,7 @@ fun parseCategoryColor(hex: String, fallbackIndex: Int): Color {
             val colorInt = android.graphics.Color.parseColor(if (hex.startsWith("#")) hex else "#$hex")
             return Color(colorInt)
         } catch (_: Exception) {
-            // Ignore parse exception and use fallback below
+            // Ignore parse exception
         }
     }
     return fallbackPalette[fallbackIndex % fallbackPalette.size]
@@ -103,8 +107,8 @@ fun AnalyticsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AnalyticsTopAppBar(onOpenDrawer: () -> Unit) {
-    TopAppBar(
-        title = { Text("Analytics") },
+    CenterAlignedTopAppBar(
+        title = { Text("Analytics", fontWeight = FontWeight.Bold) },
         navigationIcon = {
             IconButton(onClick = onOpenDrawer) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
@@ -126,7 +130,7 @@ private fun AnalyticsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AnalyticsMonthHeader(
@@ -135,13 +139,13 @@ private fun AnalyticsContent(
             onNextMonth = onNextMonth,
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (dataWithColors.isEmpty()) {
             AnalyticsEmptyState(selectedMonthLabel = state.selectedMonthLabel)
         } else {
-            DonutChart(data = dataWithColors)
-            Spacer(modifier = Modifier.height(24.dp))
+            DonutChartCard(dataWithColors = dataWithColors)
+            Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -155,26 +159,53 @@ private fun AnalyticsContent(
 }
 
 @Composable
+private fun DonutChartCard(dataWithColors: List<Pair<CategorySpend, Color>>) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            DonutChart(data = dataWithColors)
+        }
+    }
+}
+
+@Composable
 private fun AnalyticsMonthHeader(
     selectedMonthLabel: String,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
 ) {
-    Row(
+    Surface(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     ) {
-        IconButton(onClick = onPreviousMonth) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
-        }
-        Text(
-            text = selectedMonthLabel,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        IconButton(onClick = onNextMonth) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = onPreviousMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+            }
+            Text(
+                text = selectedMonthLabel,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+            IconButton(onClick = onNextMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+            }
         }
     }
 }
@@ -225,11 +256,16 @@ private fun LegendItem(
     spend: CategorySpend,
     color: Color,
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -240,9 +276,13 @@ private fun LegendItem(
                         .clip(CircleShape)
                         .background(color),
                 )
-                Spacer(modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(text = spend.category.name, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = spend.category.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
                     Text(
                         text = String.format(Locale.US, "%.1f%%", spend.percentage),
                         style = MaterialTheme.typography.bodySmall,
