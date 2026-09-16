@@ -74,7 +74,10 @@ constructor(
             }
 
             val dynamicCategories = data.recentTransactions
-                .map { TransactionFilter.Category(it.categoryId, it.categoryName) }
+                .map { expense ->
+                    val name = expense.categoryName.ifBlank { "Uncategorized" }
+                    TransactionFilter.Category(expense.categoryId, name)
+                }
                 .distinctBy { it.id }
                 .sortedBy { it.name }
 
