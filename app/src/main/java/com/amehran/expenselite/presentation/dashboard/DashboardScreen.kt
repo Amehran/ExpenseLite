@@ -270,7 +270,7 @@ private fun DashboardContent(
                     is TransactionFilter.All -> "All"
                     is TransactionFilter.Income -> "Income"
                     is TransactionFilter.Expense -> "Expense"
-                    is TransactionFilter.Category -> filter.name
+                    is TransactionFilter.Category -> filter.name.ifBlank { "Uncategorized" }
                 }
                 FilterChip(
                     selected = state.activeFilter == filter,
