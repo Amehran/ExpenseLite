@@ -17,8 +17,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,96 +36,184 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amehran.expenselite.domain.usecase.CategorySpend
 import com.amehran.expenselite.presentation.analytics.components.DonutChart
-import java.text.DateFormatSymbols
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+private val fallbackPalette = listOf(
+    Color(0xFF5C6BC0),
+    Color(0xFF4CAF50),
+    Color(0xFFFF9800),
+    Color(0xFFE91E63),
+    Color(0xFF9C27B0),
+    Color(0xFF00BCD4),
+    Color(0xFFFFC107),
+    Color(0xFF795548),
+)
+
+fun parseCategoryColor(hex: String, fallbackIndex: Int): Color {
+    if (hex.isNotBlank()) {
+        try {
+            val colorInt = android.graphics.Color.parseColor(if (hex.startsWith("#")) hex else "#$hex")
+            return Color(colorInt)
+        } catch (_: Exception) {
+            // Ignore parse exception and use fallback below
+        }
+    }
+    return fallbackPalette[fallbackIndex % fallbackPalette.size]
+}
+
 @Composable
 fun AnalyticsScreen(
     onOpenDrawer: () -> Unit,
     viewModel: AnalyticsViewModel = hiltViewModel(),
 ) {
-    val selectedYear by viewModel.selectedYear.collectAsState()
-    val selectedMonth by viewModel.selectedMonth.collectAsState()
-    val analyticsData by viewModel.analyticsData.collectAsState()
-
-    val monthName = DateFormatSymbols().months[selectedMonth]
-
-    val chartColors = listOf(
-        Color(0xFF2196F3),
-        Color(0xFFF44336),
-        Color(0xFFFFC107),
-        Color(0xFF4CAF50),
-        Color(0xFF9C27B0),
-        Color(0xFFFF9800),
-    )
-
-    val dataWithColors = analyticsData.mapIndexed { index, spend ->
-        Pair(spend, chartColors[index % chartColors.size])
-    }
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Analytics") },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-            )
+            AnalyticsTopAppBar(onOpenDrawer = onOpenDrawer)
         },
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxSize()
+                .padding(padding),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(onClick = { viewModel.previousMonth() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+            when (val state = uiState) {
+                is AnalyticsState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-                Text(
-                    text = "$monthName $selectedYear",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-                IconButton(onClick = { viewModel.nextMonth() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+                is AnalyticsState.Success -> {
+                    AnalyticsContent(
+                        state = state,
+                        onPreviousMonth = viewModel::selectPreviousMonth,
+                        onNextMonth = viewModel::selectNextMonth,
+                    )
                 }
             }
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(32.dp))
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AnalyticsTopAppBar(onOpenDrawer: () -> Unit) {
+    TopAppBar(
+        title = { Text("Analytics") },
+        navigationIcon = {
+            IconButton(onClick = onOpenDrawer) {
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
+            }
+        },
+    )
+}
 
+@Composable
+private fun AnalyticsContent(
+    state: AnalyticsState.Success,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+) {
+    val dataWithColors = state.categorySpends.mapIndexed { index, spend ->
+        Pair(spend, parseCategoryColor(spend.category.colorHex, index))
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        AnalyticsMonthHeader(
+            selectedMonthLabel = state.selectedMonthLabel,
+            onPreviousMonth = onPreviousMonth,
+            onNextMonth = onNextMonth,
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        if (dataWithColors.isEmpty()) {
+            AnalyticsEmptyState(selectedMonthLabel = state.selectedMonthLabel)
+        } else {
             DonutChart(data = dataWithColors)
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            if (dataWithColors.isEmpty()) {
-                Text(
-                    text = "No expenses for this month.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    items(dataWithColors) { (spend, color) ->
-                        LegendItem(spend = spend, color = color)
-                    }
+            Spacer(modifier = Modifier.height(24.dp))
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items(dataWithColors, key = { it.first.category.id }) { (spend, color) ->
+                    LegendItem(spend = spend, color = color)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun AnalyticsMonthHeader(
+    selectedMonthLabel: String,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(onClick = onPreviousMonth) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+        }
+        Text(
+            text = selectedMonthLabel,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        IconButton(onClick = onNextMonth) {
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+        }
+    }
+}
+
+@Composable
+private fun AnalyticsEmptyState(selectedMonthLabel: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(32.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+            Text(
+                text = "No Expenses Recorded",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "There are no expenses for $selectedMonthLabel.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
@@ -152,14 +242,14 @@ private fun LegendItem(
                 Column {
                     Text(text = spend.category.name, style = MaterialTheme.typography.titleMedium)
                     Text(
-                        text = String.format("%.1f%%", spend.percentage),
+                        text = String.format(Locale.US, "%.1f%%", spend.percentage),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
             Text(
-                text = String.format("$%.2f", spend.amountCents / 100.0),
+                text = String.format(Locale.US, "$%.2f", spend.amountCents / 100.0),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
