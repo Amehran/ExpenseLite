@@ -24,10 +24,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -45,7 +47,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     onNavigateToAddTransaction: () -> Unit,
@@ -57,70 +58,14 @@ fun DashboardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    val state = uiState
-                    if (state is DashboardState.Success) {
-                        if (state.isSearchActive) {
-                            androidx.compose.material3.OutlinedTextField(
-                                value = state.searchQuery,
-                                onValueChange = viewModel::setSearchQuery,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(56.dp)
-                                    .padding(end = 8.dp),
-                                placeholder = { Text("Search transactions...") },
-                                singleLine = true,
-                            )
-                        } else {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                            ) {
-                                IconButton(onClick = viewModel::selectPreviousMonth) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Previous Month",
-                                    )
-                                }
-                                Text(
-                                    text = state.selectedMonthLabel,
-                                    style = MaterialTheme.typography.titleMedium,
-                                )
-                                IconButton(onClick = viewModel::selectNextMonth) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = "Next Month",
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        Text("ExpenseLite")
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-                actions = {
-                    val state = uiState
-                    if (state is DashboardState.Success) {
-                        if (state.isSearchActive) {
-                            IconButton(onClick = viewModel::toggleSearch) {
-                                Icon(Icons.Default.Close, contentDescription = "Close Search")
-                            }
-                        } else {
-                            IconButton(onClick = viewModel::toggleSearch) {
-                                Icon(Icons.Default.Search, contentDescription = "Search")
-                            }
-                            IconButton(onClick = onNavigateToAnalytics) {
-                                Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Analytics")
-                            }
-                        }
-                    }
-                },
+            DashboardTopAppBar(
+                uiState = uiState,
+                onOpenDrawer = onOpenDrawer,
+                onSelectPreviousMonth = viewModel::selectPreviousMonth,
+                onSelectNextMonth = viewModel::selectNextMonth,
+                onToggleSearch = viewModel::toggleSearch,
+                onSearchQueryChange = viewModel::setSearchQuery,
+                onNavigateToAnalytics = onNavigateToAnalytics,
             )
         },
         floatingActionButton = {
@@ -130,8 +75,7 @@ fun DashboardScreen(
         },
     ) { padding ->
         Box(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
         ) {
@@ -150,14 +94,131 @@ fun DashboardScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DashboardTopAppBar(
+    uiState: DashboardState,
+    onOpenDrawer: () -> Unit,
+    onSelectPreviousMonth: () -> Unit,
+    onSelectNextMonth: () -> Unit,
+    onToggleSearch: () -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+    onNavigateToAnalytics: () -> Unit,
+) {
+    TopAppBar(
+        title = {
+            DashboardTopAppBarTitle(
+                uiState = uiState,
+                onSelectPreviousMonth = onSelectPreviousMonth,
+                onSelectNextMonth = onSelectNextMonth,
+                onSearchQueryChange = onSearchQueryChange,
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = onOpenDrawer) {
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
+            }
+        },
+        actions = {
+            DashboardTopAppBarActions(
+                uiState = uiState,
+                onToggleSearch = onToggleSearch,
+                onNavigateToAnalytics = onNavigateToAnalytics,
+            )
+        },
+    )
+}
+
+@Composable
+private fun DashboardTopAppBarTitle(
+    uiState: DashboardState,
+    onSelectPreviousMonth: () -> Unit,
+    onSelectNextMonth: () -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+) {
+    val state = uiState as? DashboardState.Success ?: run {
+        Text("ExpenseLite")
+        return
+    }
+
+    if (state.isSearchActive) {
+        OutlinedTextField(
+            value = state.searchQuery,
+            onValueChange = onSearchQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(end = 8.dp),
+            placeholder = { Text("Search transactions...") },
+            singleLine = true,
+        )
+    } else {
+        MonthSelectorRow(
+            selectedMonthLabel = state.selectedMonthLabel,
+            onSelectPreviousMonth = onSelectPreviousMonth,
+            onSelectNextMonth = onSelectNextMonth,
+        )
+    }
+}
+
+@Composable
+private fun MonthSelectorRow(
+    selectedMonthLabel: String,
+    onSelectPreviousMonth: () -> Unit,
+    onSelectNextMonth: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        IconButton(onClick = onSelectPreviousMonth) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Previous Month",
+            )
+        }
+        Text(
+            text = selectedMonthLabel,
+            style = MaterialTheme.typography.titleMedium,
+        )
+        IconButton(onClick = onSelectNextMonth) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = "Next Month",
+            )
+        }
+    }
+}
+
+@Composable
+private fun DashboardTopAppBarActions(
+    uiState: DashboardState,
+    onToggleSearch: () -> Unit,
+    onNavigateToAnalytics: () -> Unit,
+) {
+    val state = uiState as? DashboardState.Success ?: return
+
+    if (state.isSearchActive) {
+        IconButton(onClick = onToggleSearch) {
+            Icon(Icons.Default.Close, contentDescription = "Close Search")
+        }
+    } else {
+        IconButton(onClick = onToggleSearch) {
+            Icon(Icons.Default.Search, contentDescription = "Search")
+        }
+        IconButton(onClick = onNavigateToAnalytics) {
+            Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Analytics")
+        }
+    }
+}
+
 @Composable
 private fun DashboardContent(
     state: DashboardState.Success,
     onFilterSelected: (TransactionFilter) -> Unit,
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -168,8 +229,7 @@ private fun DashboardContent(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         ) {
             Column(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -212,7 +272,7 @@ private fun DashboardContent(
                     is TransactionFilter.Expense -> "Expense"
                     is TransactionFilter.Category -> filter.name
                 }
-                androidx.compose.material3.FilterChip(
+                FilterChip(
                     selected = state.activeFilter == filter,
                     onClick = { onFilterSelected(filter) },
                     label = { Text(label) },
@@ -247,8 +307,7 @@ private fun TransactionItem(expense: Expense) {
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
