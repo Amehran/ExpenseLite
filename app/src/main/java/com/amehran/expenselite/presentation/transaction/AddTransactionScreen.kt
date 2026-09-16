@@ -10,21 +10,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,12 +56,34 @@ fun AddTransactionScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Add Transaction") })
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = if (uiState.isEditMode) "Edit Transaction" else "Add Transaction",
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    if (uiState.isEditMode) {
+                        IconButton(onClick = { viewModel.onEvent(AddTransactionEvent.DeleteTransaction) }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Transaction",
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+                        }
+                    }
+                },
+            )
         },
     ) { padding ->
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize(),
@@ -63,6 +94,8 @@ fun AddTransactionScreen(
                 onValueChange = { viewModel.onEvent(AddTransactionEvent.OnTitleChanged(it)) },
                 label = { Text("Title") },
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true,
             )
 
             OutlinedTextField(
@@ -71,6 +104,8 @@ fun AddTransactionScreen(
                 label = { Text("Amount") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true,
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -78,46 +113,47 @@ fun AddTransactionScreen(
                     selected = !uiState.isIncome,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnTypeChanged(false)) },
                     label = { Text("Expense") },
+                    shape = RoundedCornerShape(12.dp),
                 )
                 FilterChip(
                     selected = uiState.isIncome,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnTypeChanged(true)) },
                     label = { Text("Income") },
+                    shape = RoundedCornerShape(12.dp),
                 )
             }
 
-            Text("Category", style = MaterialTheme.typography.titleMedium)
+            Text("Category", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(categories) { category ->
                     FilterChip(
                         selected = uiState.selectedCategoryId == category.id,
                         onClick = { viewModel.onEvent(AddTransactionEvent.OnCategorySelected(category.id)) },
                         label = { Text(category.name) },
+                        shape = RoundedCornerShape(12.dp),
                     )
                 }
             }
 
-            // Subscriptions/Recurrence UI (T020 placeholder for now)
-            Text("Recurrence (Optional)", style = MaterialTheme.typography.titleMedium)
+            Text("Recurrence (Optional)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.NONE,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.NONE)) },
                     label = { Text("None") },
+                    shape = RoundedCornerShape(12.dp),
                 )
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.MONTHLY,
-                    onClick = {
-                        viewModel.onEvent(
-                            AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY),
-                        )
-                    },
+                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY)) },
                     label = { Text("Monthly") },
+                    shape = RoundedCornerShape(12.dp),
                 )
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.YEARLY,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.YEARLY)) },
                     label = { Text("Yearly") },
+                    shape = RoundedCornerShape(12.dp),
                 )
             }
 
@@ -127,6 +163,7 @@ fun AddTransactionScreen(
                 onClick = { viewModel.onEvent(AddTransactionEvent.SaveTransaction) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.isLoading,
+                shape = RoundedCornerShape(12.dp),
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
@@ -134,7 +171,19 @@ fun AddTransactionScreen(
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                 } else {
-                    Text("Save Transaction")
+                    Text(if (uiState.isEditMode) "Update Transaction" else "Save Transaction")
+                }
+            }
+
+            if (uiState.isEditMode) {
+                OutlinedButton(
+                    onClick = { viewModel.onEvent(AddTransactionEvent.DeleteTransaction) },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !uiState.isLoading,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                ) {
+                    Text("Delete Transaction")
                 }
             }
         }
