@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -51,6 +50,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -230,9 +232,40 @@ private fun DashboardTopAppBarActions(
             Icon(Icons.Default.Search, contentDescription = "Search")
         }
         IconButton(onClick = onNavigateToAnalytics) {
-            Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Analytics")
+            Icon(AnalyticsChartIcon, contentDescription = "Analytics")
         }
     }
+}
+
+private val AnalyticsChartIcon: ImageVector by lazy {
+    ImageVector.Builder(
+        name = "AnalyticsChart",
+        defaultWidth = 24.dp,
+        defaultHeight = 24.dp,
+        viewportWidth = 24f,
+        viewportHeight = 24f,
+    ).apply {
+        path(fill = SolidColor(Color.Black)) {
+            moveTo(4f, 19f)
+            horizontalLineToRelative(3.5f)
+            verticalLineTo(12f)
+            horizontalLineTo(4f)
+            verticalLineToRelative(7f)
+            close()
+            moveTo(10.25f, 19f)
+            horizontalLineToRelative(3.5f)
+            verticalLineTo(5f)
+            horizontalLineTo(10.25f)
+            verticalLineToRelative(14f)
+            close()
+            moveTo(16.5f, 19f)
+            horizontalLineToRelative(3.5f)
+            verticalLineTo(9f)
+            horizontalLineTo(16.5f)
+            verticalLineToRelative(10f)
+            close()
+        }
+    }.build()
 }
 
 @Composable
