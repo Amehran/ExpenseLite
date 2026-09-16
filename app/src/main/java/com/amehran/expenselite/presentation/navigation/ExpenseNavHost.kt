@@ -34,6 +34,7 @@ fun ExpenseNavHost(
         composable<AppRoute.DashboardRoute> {
             DashboardScreen(
                 onNavigateToAddTransaction = { navController.navigate(AppRoute.AddEditRoute()) },
+                onEditTransaction = { id -> navController.navigate(AppRoute.AddEditRoute(expenseId = id.toString())) },
                 onNavigateToAnalytics = { navController.navigate(AppRoute.AnalyticsRoute) },
                 onOpenDrawer = { scope.launch { drawerState.open() } },
             )

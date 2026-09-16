@@ -1,6 +1,7 @@
 package com.amehran.expenselite.presentation.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,6 +67,7 @@ import java.util.Locale
 fun DashboardScreen(
     onNavigateToAnalytics: () -> Unit,
     onNavigateToAddTransaction: () -> Unit = {},
+    onEditTransaction: (Long) -> Unit = {},
     onOpenDrawer: () -> Unit = {},
     drawerState: DrawerState? = null,
     viewModel: DashboardViewModel = hiltViewModel(),
@@ -116,6 +118,7 @@ fun DashboardScreen(
                     DashboardContent(
                         state = state,
                         onFilterSelected = { viewModel.setFilter(it) },
+                        onEditTransaction = onEditTransaction,
                     )
                 }
             }
@@ -236,6 +239,7 @@ private fun DashboardTopAppBarActions(
 private fun DashboardContent(
     state: DashboardState.Success,
     onFilterSelected: (TransactionFilter) -> Unit,
+    onEditTransaction: (Long) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -262,7 +266,10 @@ private fun DashboardContent(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(state.recentTransactions, key = { it.id }) { expense ->
-                    TransactionItem(expense = expense)
+                    TransactionItem(
+                        expense = expense,
+                        onEditTransaction = onEditTransaction,
+                    )
                 }
             }
         }
@@ -376,7 +383,10 @@ private fun EmptyTransactionsPlaceholder() {
 }
 
 @Composable
-private fun TransactionItem(expense: Expense) {
+private fun TransactionItem(
+    expense: Expense,
+    onEditTransaction: (Long) -> Unit,
+) {
     val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     val dateString = formatter.format(Date(expense.timestamp))
     val amountColor = if (expense.isIncome) Emerald500 else Rose500
@@ -386,7 +396,9 @@ private fun TransactionItem(expense: Expense) {
     val categoryColor = parseColor(expense.categoryColorHex)
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onEditTransaction(expense.id) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
