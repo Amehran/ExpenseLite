@@ -62,6 +62,6 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 ---
 
 ## Phase 6 — Verification & Polish
-- [ ] T228 Run full test suite including unit tests and Compose rules.
-- [ ] T229 Verify export→wipe→import round-trip works correctly using both Merge and Overwrite strategies.
-- [ ] T230 Run `./gradlew ktlintCheck detekt assembleDebug bundleRelease` to verify CI standards and minification.
+- [x] T228 Run full test suite including unit tests and Compose rules.
+- [x] T229 Verify export→wipe→import round-trip works correctly using both Merge and Overwrite strategies.
+- [x] T230 Run `./gradlew ktlintCheck detekt assembleDebug bundleRelease` to verify CI standards and minification.
