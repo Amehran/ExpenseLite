@@ -52,12 +52,12 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 ## Phase 5 — Data Portability (Export/Import with SAF)
 **Purpose**: Resilient local backup with schema versions and conflict resolution.
 
-- [ ] T222 Update `ExportDataUseCase` to serialize output as JSON with a `"schemaVersion": 2` top-level field.
-- [ ] T223 Refactor `ImportDataUseCase` to parse the `"schemaVersion"` and accept a `ConflictStrategy` (`Merge` or `Overwrite`).
-- [ ] T224 Ensure `ImportDataUseCase` executes all inserts wrapped inside a Room `@Transaction` block to ensure atomicity.
-- [ ] T225 Update `SettingsViewModel` with state machine: `isExporting`, `isImporting`, `showConflictDialog`, `pendingImportUri`.
-- [ ] T226 Update `SettingsScreen` to render an `AlertDialog` for Merge vs Overwrite selection when an import file is selected.
-- [ ] T227 Add `ActivityResultLauncher` logic to handle SAF intents without keeping persistable permissions.
+- [x] T222 Update `ExportDataUseCase` to serialize output as JSON with a `"schemaVersion": 2` top-level field.
+- [x] T223 Refactor `ImportDataUseCase` to parse the `"schemaVersion"` and accept a `ConflictStrategy` (`Merge` or `Overwrite`).
+- [x] T224 Ensure `ImportDataUseCase` executes all inserts wrapped inside a Room `@Transaction` block to ensure atomicity.
+- [x] T225 Update `SettingsViewModel` with state machine: `isExporting`, `isImporting`, `showConflictDialog`, `pendingImportUri`.
+- [x] T226 Update `SettingsScreen` to render an `AlertDialog` for Merge vs Overwrite selection when an import file is selected.
+- [x] T227 Add `ActivityResultLauncher` logic to handle SAF intents without keeping persistable permissions.
 
 ---
 

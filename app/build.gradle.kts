@@ -158,6 +158,8 @@ dependencies {
     // Testing
     testImplementation("org.json:json:20240303")
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation("org.mockito:mockito-core:5.11.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 
     // Compose UI Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))

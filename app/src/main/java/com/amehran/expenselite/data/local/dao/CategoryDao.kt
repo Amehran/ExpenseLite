@@ -25,4 +25,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getCategoryById(id: Long): CategoryEntity?
+
+    @Query("DELETE FROM categories WHERE isSystemDefault = 0")
+    suspend fun deleteNonSystemCategories()
 }
