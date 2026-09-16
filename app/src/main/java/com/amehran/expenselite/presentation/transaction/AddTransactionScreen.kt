@@ -136,25 +136,22 @@ fun AddTransactionScreen(
             }
 
             Text("Recurrence (Optional)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
-                    selected = uiState.recurrence == RecurrenceInterval.NONE,
-                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.NONE)) },
-                    label = { Text("None") },
-                    shape = RoundedCornerShape(12.dp),
-                )
-                FilterChip(
-                    selected = uiState.recurrence == RecurrenceInterval.MONTHLY,
-                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY)) },
-                    label = { Text("Monthly") },
-                    shape = RoundedCornerShape(12.dp),
-                )
-                FilterChip(
-                    selected = uiState.recurrence == RecurrenceInterval.YEARLY,
-                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.YEARLY)) },
-                    label = { Text("Yearly") },
-                    shape = RoundedCornerShape(12.dp),
-                )
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(RecurrenceInterval.entries.toTypedArray()) { interval ->
+                    val label = when (interval) {
+                        RecurrenceInterval.NONE -> "None"
+                        RecurrenceInterval.DAILY -> "Daily"
+                        RecurrenceInterval.WEEKLY -> "Weekly"
+                        RecurrenceInterval.MONTHLY -> "Monthly"
+                        RecurrenceInterval.YEARLY -> "Yearly"
+                    }
+                    FilterChip(
+                        selected = uiState.recurrence == interval,
+                        onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(interval)) },
+                        label = { Text(label) },
+                        shape = RoundedCornerShape(12.dp),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

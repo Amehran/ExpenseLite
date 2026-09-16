@@ -18,6 +18,12 @@ class CalculateProjectedSubscriptionsUseCase @Inject constructor(
 
             expenses.filter { it.isSubscription && !it.isPaused }.forEach { expense ->
                 when (expense.recurrenceInterval) {
+                    RecurrenceInterval.DAILY -> {
+                        projectedMonthlyTotalCents += (expense.amountCents * 30)
+                    }
+                    RecurrenceInterval.WEEKLY -> {
+                        projectedMonthlyTotalCents += (expense.amountCents * 52 / 12)
+                    }
                     RecurrenceInterval.MONTHLY -> {
                         projectedMonthlyTotalCents += expense.amountCents
                     }

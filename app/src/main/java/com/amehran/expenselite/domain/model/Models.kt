@@ -24,6 +24,8 @@ data class Expense(
 
 enum class RecurrenceInterval {
     NONE,
+    DAILY,
+    WEEKLY,
     MONTHLY,
     YEARLY,
 }
