@@ -6,10 +6,24 @@ import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
     fun getAllExpenses(): Flow<List<Expense>>
+
+    fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>>
+
     fun getAllCategories(): Flow<List<Category>>
+
     suspend fun getExpenseById(id: Long): Expense?
+
     suspend fun getCategoryById(id: Long): Category?
+
     suspend fun addExpense(expense: Expense): Long
+
     suspend fun updateExpense(expense: Expense)
+
     suspend fun deleteExpense(expense: Expense)
+
+    suspend fun addCategory(category: Category): Long
+
+    suspend fun deleteCategory(category: Category)
+
+    suspend fun reassignExpensesToUncategorized(oldCategoryId: Long)
 }

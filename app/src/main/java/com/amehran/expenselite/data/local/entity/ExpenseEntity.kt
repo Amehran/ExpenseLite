@@ -14,5 +14,7 @@ data class ExpenseEntity(
     val isIncome: Boolean,
     val isSubscription: Boolean,
     val recurrenceInterval: String, // "NONE", "MONTHLY", "YEARLY"
-    val isPaused: Boolean
+    val isPaused: Boolean,
+    val categoryName: String = "",
+    val categoryColorHex: String = "",
 )

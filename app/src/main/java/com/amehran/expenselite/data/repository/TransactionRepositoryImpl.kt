@@ -12,13 +12,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class TransactionRepositoryImpl @Inject constructor(
+class TransactionRepositoryImpl
+@Inject
+constructor(
     private val expenseDao: ExpenseDao,
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
 ) : TransactionRepository {
-
     override fun getAllExpenses(): Flow<List<Expense>> {
         return expenseDao.getAllExpenses().map { entities ->
+            entities.map { it.toDomainModel() }
+        }
+    }
+
+    override fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>> {
+        return expenseDao.getExpensesByDateRange(startTimestamp, endTimestamp).map { entities ->
             entities.map { it.toDomainModel() }
         }
     }
@@ -49,6 +56,18 @@ class TransactionRepositoryImpl @Inject constructor(
         expenseDao.deleteExpense(expense.toEntity())
     }
 
+    override suspend fun addCategory(category: Category): Long {
+        return categoryDao.insertCategory(category.toEntity())
+    }
+
+    override suspend fun deleteCategory(category: Category) {
+        categoryDao.deleteCategory(category.toEntity())
+    }
+
+    override suspend fun reassignExpensesToUncategorized(oldCategoryId: Long) {
+        expenseDao.reassignExpensesToUncategorized(oldCategoryId)
+    }
+
     // Mappers
     private fun ExpenseEntity.toDomainModel(): Expense {
         return Expense(
@@ -56,11 +75,13 @@ class TransactionRepositoryImpl @Inject constructor(
             title = this.title,
             amountCents = this.amountCents,
             categoryId = this.categoryId,
+            categoryName = this.categoryName,
+            categoryColorHex = this.categoryColorHex,
             timestamp = this.timestamp,
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
             recurrenceInterval = RecurrenceInterval.valueOf(this.recurrenceInterval),
-            isPaused = this.isPaused
+            isPaused = this.isPaused,
         )
     }
 
@@ -70,11 +91,13 @@ class TransactionRepositoryImpl @Inject constructor(
             title = this.title,
             amountCents = this.amountCents,
             categoryId = this.categoryId,
+            categoryName = this.categoryName,
+            categoryColorHex = this.categoryColorHex,
             timestamp = this.timestamp,
             isIncome = this.isIncome,
             isSubscription = this.isSubscription,
             recurrenceInterval = this.recurrenceInterval.name,
-            isPaused = this.isPaused
+            isPaused = this.isPaused,
         )
     }
 
@@ -83,7 +106,18 @@ class TransactionRepositoryImpl @Inject constructor(
             id = this.id,
             name = this.name,
             iconResName = this.iconResName,
-            isSystemDefault = this.isSystemDefault
+            isSystemDefault = this.isSystemDefault,
+            colorHex = this.colorHex,
+        )
+    }
+
+    private fun Category.toEntity(): CategoryEntity {
+        return CategoryEntity(
+            id = this.id,
+            name = this.name,
+            iconResName = this.iconResName,
+            isSystemDefault = this.isSystemDefault,
+            colorHex = this.colorHex,
         )
     }
 }

@@ -11,18 +11,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val taskRepository: TaskRepository
+class HomeViewModel
+@Inject
+constructor(
+    private val taskRepository: TaskRepository,
 ) : ViewModel() {
-
     // Convert Repository Flow directly to UI State Flow
-    val uiState: StateFlow<HomeUiState> = taskRepository.getTasks()
-        .map { tasks -> HomeUiState.Success(tasks) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeUiState.Loading
-        )
+    val uiState: StateFlow<HomeUiState> =
+        taskRepository.getTasks()
+            .map { tasks -> HomeUiState.Success(tasks) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = HomeUiState.Loading,
+            )
 
     fun refreshTasks() {
         viewModelScope.launch {

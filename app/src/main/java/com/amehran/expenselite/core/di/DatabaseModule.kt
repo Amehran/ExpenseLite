@@ -15,20 +15,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideExpenseDatabase(
         app: Application,
-        callback: DatabaseCallback
+        callback: DatabaseCallback,
     ): ExpenseDatabase {
         return Room.databaseBuilder(
             app,
             ExpenseDatabase::class.java,
-            ExpenseDatabase.DATABASE_NAME
+            ExpenseDatabase.DATABASE_NAME,
         )
-        .addCallback(callback)
-        .build()
+            .addMigrations(ExpenseDatabase.MIGRATION_1_2)
+            .addCallback(callback)
+            .build()
     }
 
     @Provides

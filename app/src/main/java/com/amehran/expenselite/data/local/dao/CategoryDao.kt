@@ -22,7 +22,7 @@ interface CategoryDao {
 
     @Delete
     suspend fun deleteCategory(category: CategoryEntity)
-    
+
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getCategoryById(id: Long): CategoryEntity?
 }

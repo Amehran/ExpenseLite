@@ -7,12 +7,16 @@ import javax.inject.Singleton
 
 interface TaskRepository {
     fun getTasks(): Flow<List<String>>
+
     suspend fun refresh()
 }
 
 @Singleton
-class DummyTaskRepository @Inject constructor() : TaskRepository {
+class DummyTaskRepository
+@Inject
+constructor() : TaskRepository {
     override fun getTasks(): Flow<List<String>> = flowOf(emptyList())
+
     override suspend fun refresh() {
         // Do nothing for now
     }

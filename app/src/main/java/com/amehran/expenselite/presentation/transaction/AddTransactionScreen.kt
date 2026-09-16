@@ -1,23 +1,40 @@
 package com.amehran.expenselite.presentation.transaction
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amehran.expenselite.domain.model.Category
 import com.amehran.expenselite.domain.model.RecurrenceInterval
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(
     onNavigateBack: () -> Unit,
-    viewModel: AddTransactionViewModel = hiltViewModel()
+    viewModel: AddTransactionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categories.collectAsState()
@@ -31,27 +48,21 @@ fun AddTransactionScreen(
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Add Transaction") })
-        }
+        },
     ) { padding ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (uiState.errorMessage != null) {
-                Text(
-                    text = uiState.errorMessage!!,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-
             OutlinedTextField(
                 value = uiState.title,
                 onValueChange = { viewModel.onEvent(AddTransactionEvent.OnTitleChanged(it)) },
                 label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             OutlinedTextField(
@@ -59,19 +70,19 @@ fun AddTransactionScreen(
                 onValueChange = { viewModel.onEvent(AddTransactionEvent.OnAmountChanged(it)) },
                 label = { Text("Amount") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(
                     selected = !uiState.isIncome,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnTypeChanged(false)) },
-                    label = { Text("Expense") }
+                    label = { Text("Expense") },
                 )
                 FilterChip(
                     selected = uiState.isIncome,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnTypeChanged(true)) },
-                    label = { Text("Income") }
+                    label = { Text("Income") },
                 )
             }
 
@@ -81,7 +92,7 @@ fun AddTransactionScreen(
                     FilterChip(
                         selected = uiState.selectedCategoryId == category.id,
                         onClick = { viewModel.onEvent(AddTransactionEvent.OnCategorySelected(category.id)) },
-                        label = { Text(category.name) }
+                        label = { Text(category.name) },
                     )
                 }
             }
@@ -92,17 +103,21 @@ fun AddTransactionScreen(
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.NONE,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.NONE)) },
-                    label = { Text("None") }
+                    label = { Text("None") },
                 )
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.MONTHLY,
-                    onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY)) },
-                    label = { Text("Monthly") }
+                    onClick = {
+                        viewModel.onEvent(
+                            AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.MONTHLY),
+                        )
+                    },
+                    label = { Text("Monthly") },
                 )
                 FilterChip(
                     selected = uiState.recurrence == RecurrenceInterval.YEARLY,
                     onClick = { viewModel.onEvent(AddTransactionEvent.OnRecurrenceChanged(RecurrenceInterval.YEARLY)) },
-                    label = { Text("Yearly") }
+                    label = { Text("Yearly") },
                 )
             }
 
@@ -111,10 +126,13 @@ fun AddTransactionScreen(
             Button(
                 onClick = { viewModel.onEvent(AddTransactionEvent.SaveTransaction) },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading
+                enabled = !uiState.isLoading,
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
                 } else {
                     Text("Save Transaction")
                 }
