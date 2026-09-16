@@ -93,7 +93,8 @@ class AnalyticsViewModelTest {
 
         override fun getAllExpenses(): Flow<List<Expense>> = flowOf(expenses)
 
-        override fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>> = flowOf(expenses)
+        override fun getExpensesByDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Expense>> =
+            flowOf(expenses)
 
         override fun getAllCategories(): Flow<List<Category>> = flowOf(categories)
 
@@ -103,14 +104,22 @@ class AnalyticsViewModelTest {
 
         override suspend fun addExpense(expense: Expense): Long = 1L
 
-        override suspend fun updateExpense(expense: Expense) {}
+        override suspend fun updateExpense(expense: Expense) {
+            // Unused in tests
+        }
 
-        override suspend fun deleteExpense(expense: Expense) {}
+        override suspend fun deleteExpense(expense: Expense) {
+            // Unused in tests
+        }
 
         override suspend fun addCategory(category: Category): Long = 1L
 
-        override suspend fun deleteCategory(category: Category) {}
+        override suspend fun deleteCategory(category: Category) {
+            // Unused in tests
+        }
 
-        override suspend fun reassignExpensesToUncategorized(oldCategoryId: Long) {}
+        override suspend fun reassignExpensesToUncategorized(oldCategoryId: Long) {
+            // Unused in tests
+        }
     }
 }

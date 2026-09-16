@@ -43,6 +43,7 @@ import com.amehran.expenselite.domain.usecase.CategorySpend
 import com.amehran.expenselite.presentation.analytics.components.DonutChart
 import java.util.Locale
 
+@Suppress("MagicNumber")
 private val fallbackPalette = listOf(
     Color(0xFF5C6BC0),
     Color(0xFF4CAF50),
@@ -218,6 +219,7 @@ private fun AnalyticsEmptyState(selectedMonthLabel: String) {
     }
 }
 
+@Suppress("MagicNumber")
 @Composable
 private fun LegendItem(
     spend: CategorySpend,
