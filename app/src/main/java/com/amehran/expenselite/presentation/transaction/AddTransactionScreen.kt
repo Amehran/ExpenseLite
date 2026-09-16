@@ -123,15 +123,17 @@ fun AddTransactionScreen(
                 )
             }
 
-            Text("Category", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(categories) { category ->
-                    FilterChip(
-                        selected = uiState.selectedCategoryId == category.id,
-                        onClick = { viewModel.onEvent(AddTransactionEvent.OnCategorySelected(category.id)) },
-                        label = { Text(category.name) },
-                        shape = RoundedCornerShape(12.dp),
-                    )
+            if (!uiState.isIncome) {
+                Text("Category", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(categories) { category ->
+                        FilterChip(
+                            selected = uiState.selectedCategoryId == category.id,
+                            onClick = { viewModel.onEvent(AddTransactionEvent.OnCategorySelected(category.id)) },
+                            label = { Text(category.name) },
+                            shape = RoundedCornerShape(12.dp),
+                        )
+                    }
                 }
             }
 

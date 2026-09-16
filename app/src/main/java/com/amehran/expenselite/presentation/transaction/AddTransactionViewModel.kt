@@ -77,22 +77,26 @@ constructor(
         val state = _uiState.value
         val amountCents = (state.amountString.toDoubleOrNull()?.times(100))?.toLong() ?: 0L
 
-        if (state.selectedCategoryId == null) {
+        if (!state.isIncome && state.selectedCategoryId == null) {
             viewModelScope.launch {
                 SnackbarController.showMessage("Please select a category")
             }
             return
         }
 
-        val category = categories.value.find { it.id == state.selectedCategoryId }
+        val category = if (!state.isIncome) {
+            categories.value.find { it.id == state.selectedCategoryId }
+        } else {
+            null
+        }
 
         val expense = Expense(
             id = state.expenseId ?: 0L,
             title = state.title,
             amountCents = amountCents,
-            categoryId = state.selectedCategoryId,
-            categoryName = category?.name ?: "",
-            categoryColorHex = category?.colorHex ?: "",
+            categoryId = if (state.isIncome) 0L else (state.selectedCategoryId ?: 0L),
+            categoryName = if (state.isIncome) "Income" else (category?.name ?: ""),
+            categoryColorHex = if (state.isIncome) "#10B981" else (category?.colorHex ?: ""),
             timestamp = System.currentTimeMillis(),
             isIncome = state.isIncome,
             isSubscription = state.recurrence != RecurrenceInterval.NONE,
