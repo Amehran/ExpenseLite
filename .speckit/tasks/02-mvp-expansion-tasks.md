@@ -43,9 +43,9 @@ _Format: `[ ]` todo · `[/]` in-progress · `[x]` done_
 ## Phase 4 — Analytics View Enhancements
 **Purpose**: Month selection, empty states, and visual polishing.
 
-- [ ] T219 Update `AnalyticsScreen` to include the month selector (Prev/Next chevrons) to change the `monthOffset`.
-- [ ] T220 Update `DonutChart` rendering to use the new `categoryColorHex` from the DB instead of generating random/hardcoded colors.
-- [ ] T221 Add a robust empty state for `AnalyticsScreen` when the selected month has zero expenses.
+- [x] T219 Update `AnalyticsScreen` to include the month selector (Prev/Next chevrons) to change the `monthOffset`.
+- [x] T220 Update `DonutChart` rendering to use the new `categoryColorHex` from the DB instead of generating random/hardcoded colors.
+- [x] T221 Add a robust empty state for `AnalyticsScreen` when the selected month has zero expenses.
 
 ---
 
