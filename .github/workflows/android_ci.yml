@@ -95,7 +95,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Run SonarCloud Analysis
-        if: ${{ secrets.SONAR_TOKEN != '' }}
+        if: secrets.SONAR_TOKEN != ''
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
