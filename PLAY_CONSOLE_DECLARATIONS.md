@@ -13,3 +13,11 @@ This document outlines the standard Google Play Console Questionnaire declaratio
 - **Target Audience:** General Audience (18+ / All Ages).
 - **Ads:** No ads present.
 - **Background Location / Sensitive Permissions:** None.
+
+## 3. Store Listing & Video Requirements
+- **YouTube Video URL (Optional / XR):** If adding a video link:
+  - Must be **Public** or **Unlisted** YouTube URL.
+  - Ads / Monetization MUST be turned OFF.
+  - Must NOT be age-restricted.
+  - Paste your YouTube video link into Google Play Console under **Store Presence -> Main Store Listing -> Preview Video / Non-spatial XR Video**.
+

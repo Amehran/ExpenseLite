@@ -62,3 +62,7 @@ Thumbs.db
 *.temp
 *.swp
 *~
+
+# Store Listing Marketing Assets
+store_assets/
+
