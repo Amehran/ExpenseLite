@@ -274,36 +274,42 @@ private fun DashboardContent(
     onFilterSelected: (TransactionFilter) -> Unit,
     onEditTransaction: (Long) -> Unit,
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SummaryHeroCard(state)
+        item {
+            SummaryHeroCard(state)
+        }
 
-        FilterChipRow(
-            availableFilters = state.availableFilters,
-            activeFilter = state.activeFilter,
-            onFilterSelected = onFilterSelected,
-        )
+        item {
+            FilterChipRow(
+                availableFilters = state.availableFilters,
+                activeFilter = state.activeFilter,
+                onFilterSelected = onFilterSelected,
+            )
+        }
 
-        Text(
-            text = "Recent Transactions",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-        )
+        item {
+            Text(
+                text = "Recent Transactions",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+        }
 
         if (state.recentTransactions.isEmpty()) {
-            EmptyTransactionsPlaceholder()
+            item {
+                EmptyTransactionsPlaceholder()
+            }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(state.recentTransactions, key = { it.id }) { expense ->
-                    TransactionItem(
-                        expense = expense,
-                        onEditTransaction = onEditTransaction,
-                    )
-                }
+            items(state.recentTransactions, key = { it.id }) { expense ->
+                TransactionItem(
+                    expense = expense,
+                    onEditTransaction = onEditTransaction,
+                )
             }
         }
     }

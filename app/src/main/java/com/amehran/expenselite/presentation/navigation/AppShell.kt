@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
@@ -58,10 +60,15 @@ fun AppShell(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                // Header with Logo, Title, and Navigation Close Button
-                DrawerHeader(
-                    onCloseClick = { scope.launch { drawerState.close() } },
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    // Header with Logo, Title, and Navigation Close Button
+                    DrawerHeader(
+                        onCloseClick = { scope.launch { drawerState.close() } },
+                    )
 
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -134,7 +141,7 @@ fun AppShell(
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 // Footer Caption
                 Text(
@@ -144,7 +151,8 @@ fun AppShell(
                     modifier = Modifier.padding(28.dp),
                 )
             }
-        },
+        }
+    },
         modifier = modifier,
     ) {
         ExpenseNavHost(

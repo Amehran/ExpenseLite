@@ -126,32 +126,31 @@ private fun AnalyticsContent(
         Pair(spend, parseCategoryColor(spend.category.colorHex, index))
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        AnalyticsMonthHeader(
-            selectedMonthLabel = state.selectedMonthLabel,
-            onPreviousMonth = onPreviousMonth,
-            onNextMonth = onNextMonth,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            AnalyticsMonthHeader(
+                selectedMonthLabel = state.selectedMonthLabel,
+                onPreviousMonth = onPreviousMonth,
+                onNextMonth = onNextMonth,
+            )
+        }
 
         if (dataWithColors.isEmpty()) {
-            AnalyticsEmptyState(selectedMonthLabel = state.selectedMonthLabel)
+            item {
+                AnalyticsEmptyState(selectedMonthLabel = state.selectedMonthLabel)
+            }
         } else {
-            DonutChartCard(dataWithColors = dataWithColors)
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(dataWithColors, key = { it.first.category.id }) { (spend, color) ->
-                    LegendItem(spend = spend, color = color)
-                }
+            item {
+                DonutChartCard(dataWithColors = dataWithColors)
+            }
+            items(dataWithColors, key = { it.first.category.id }) { (spend, color) ->
+                LegendItem(spend = spend, color = color)
             }
         }
     }
